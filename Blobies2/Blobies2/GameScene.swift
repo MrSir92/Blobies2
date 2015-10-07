@@ -39,17 +39,20 @@ class GameScene: SKScene {
         
         TheLevel.moveCamera(-210);
 
-        var wait = SKAction.waitForDuration(4)
-        var run = SKAction.runBlock {
-            
-            self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
-        }
         self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
         var blobCount = 1
-        if (blobCount < 25) {
-            self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
-            blobCount++
+        
+        var wait = SKAction.waitForDuration(4)
+        var run = SKAction.runBlock {
+            if (blobCount < 5) {
+                self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
+                blobCount++
+            }
         }
+        
+            self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+            
+        
     }
     
     var lastPoint = CGPoint(x: 0, y: 0)
