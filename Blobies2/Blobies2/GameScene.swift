@@ -37,9 +37,21 @@ class GameScene: SKScene {
         
         self.backgroundColor = darkBrownColor;
         
+        TheLevel.moveCamera(-210);
+
+        var wait = SKAction.waitForDuration(4)
+        var run = SKAction.runBlock {
+            
+            self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
+        }
         self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
-        
+        var blobCount = 1
+        if (blobCount < 25) {
+            self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+            blobCount++
+        }
     }
+    
     var lastPoint = CGPoint(x: 0, y: 0)
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        /* Called when a touch begins */
@@ -121,6 +133,6 @@ class GameScene: SKScene {
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        TheLevel.moveCamera(-210);
+        
     }
 }
