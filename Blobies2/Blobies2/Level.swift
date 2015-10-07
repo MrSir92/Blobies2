@@ -129,9 +129,11 @@ class Level: SKNode {
     func spawnBlobNode(point: CGPoint) {
         let sprite = BlobNode.blob(point)
         sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height/2)
+        sprite.physicsBody!.allowsRotation = false
         sprite.name = "Blobie1"
         self.addChild(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
+        sprite.runAction(SKAction.moveByX(10000, y: 0, duration: 1000))
     }
     
 }

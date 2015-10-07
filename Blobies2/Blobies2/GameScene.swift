@@ -32,6 +32,8 @@ class GameScene: SKScene {
         
         self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
         
+        
+        
     }
     var lastPoint = CGPoint(x: 0, y: 0)
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -95,6 +97,7 @@ class GameScene: SKScene {
         lineNode.lineWidth = 4
         lineNode.strokeColor = UIColor.redColor()
         lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
+        lineNode.physicsBody?.friction = 1.0
         self.addChild(lineNode)
         ref = CGPathCreateMutable()
         print(pathLength)
