@@ -117,6 +117,7 @@ class GameScene: SKScene {
         lineNode.lineWidth = 4
         lineNode.strokeColor = UIColor.redColor()
         lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
+        lineNode.physicsBody?.friction = 5.0
         lineNode.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
         lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
         self.addChild(lineNode)
