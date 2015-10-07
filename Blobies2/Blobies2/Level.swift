@@ -130,6 +130,7 @@ class Level: SKNode {
         let sprite = BlobNode.blob(point)
         sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height/2)
         sprite.physicsBody!.allowsRotation = false
+        sprite.physicsBody?.linearDamping = 0.2
         sprite.name = "Blobie1"
         self.addChild(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
