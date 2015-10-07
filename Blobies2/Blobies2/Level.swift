@@ -13,6 +13,13 @@ class Level: SKNode {
     
     var Camera: SKNode!
     var World: SKNode!
+    enum CollisionTypes: UInt32 {
+        case Blob = 1
+        case Wall = 2
+        case Smudge = 4
+        case Start = 8
+        case Finish = 16
+    }
     
     convenience init(progress: Int) {
         self.init();
@@ -37,6 +44,7 @@ class Level: SKNode {
             roof1.position = CGPoint(x: 74, y: 400);
             roof1.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 150, height: 300))
             roof1.physicsBody?.dynamic = false;
+            roof1.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(roof1);
             let wall1 = SKShapeNode(rectOfSize: CGSize(width: 20, height: 140));
             wall1.name = "wall1";
@@ -44,6 +52,7 @@ class Level: SKNode {
             wall1.position = CGPoint(x: 9, y: 180);
             wall1.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 20, height: 140))
             wall1.physicsBody?.dynamic = false;
+            wall1.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(wall1);
             let ground1 = SKShapeNode(rectOfSize: CGSize(width: 200, height: 30));
             ground1.name = "ground1";
@@ -51,6 +60,7 @@ class Level: SKNode {
             ground1.position = CGPoint(x: 99, y: 110);
             ground1.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 200, height: 30))
             ground1.physicsBody?.dynamic = false;
+            ground1.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(ground1);
             let ground2 = SKShapeNode(rectOfSize: CGSize(width: 30, height: 30));
             ground2.name = "ground1";
@@ -58,6 +68,7 @@ class Level: SKNode {
             ground2.position = CGPoint(x: 245, y: 110);
             ground2.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 30, height: 30))
             ground2.physicsBody?.dynamic = false;
+            ground2.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(ground2);
             let ground3 = SKShapeNode(rectOfSize: CGSize(width: 100, height: 30))
             ground3.name = "ground3";
@@ -65,6 +76,7 @@ class Level: SKNode {
             ground3.position = CGPoint(x: 370, y: 110);
             ground3.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 100, height: 30))
             ground3.physicsBody?.dynamic = false;
+            ground3.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(ground3)
             let ground4 = SKShapeNode(rectOfSize: CGSize(width: 50, height: 30))
             ground4.name = "ground4";
@@ -72,6 +84,7 @@ class Level: SKNode {
             ground4.position = CGPoint(x: 475, y: 110);
             ground4.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 50, height: 30))
             ground4.physicsBody?.dynamic = false;
+            ground4.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(ground4)
             let ground5 = SKShapeNode(rectOfSize: CGSize(width: 150, height: 60))
             ground5.name = "ground5";
@@ -79,6 +92,7 @@ class Level: SKNode {
             ground5.position = CGPoint(x: 575, y: 125);
             ground5.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 150, height: 60))
             ground5.physicsBody?.dynamic = false;
+            ground5.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(ground5)
             let ground6 = SKShapeNode(rectOfSize: CGSize(width: 150, height: 30))
             ground6.name = "ground6";
@@ -86,6 +100,7 @@ class Level: SKNode {
             ground6.position = CGPoint(x: 825, y: 110);
             ground6.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 150, height: 30))
             ground6.physicsBody?.dynamic = false;
+            ground6.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(ground6)
             let wall2 = SKShapeNode(rectOfSize: CGSize(width: 20, height: 230))
             wall2.name = "wall2";
@@ -93,6 +108,7 @@ class Level: SKNode {
             wall2.position = CGPoint(x: 910, y: 210);
             wall2.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 20, height: 230))
             wall2.physicsBody?.dynamic = false;
+            wall2.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(wall2)
             print("levelstarted")
         default:
@@ -131,6 +147,8 @@ class Level: SKNode {
         sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height/2)
         sprite.physicsBody!.allowsRotation = false
         sprite.physicsBody?.linearDamping = 0.2
+        sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
+        sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
         sprite.name = "Blobie1"
         self.addChild(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)

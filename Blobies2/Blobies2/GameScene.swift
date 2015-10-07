@@ -13,6 +13,13 @@ class GameScene: SKScene {
     
     var TheLevel: Level!
     var globalBool: Bool = false
+    enum CollisionTypes: UInt32 {
+        case Blob = 1
+        case Wall = 2
+        case Smudge = 4
+        case Start = 8
+        case Finish = 16
+    }
     
     
     override func didMoveToView(view: SKView) {
@@ -31,8 +38,6 @@ class GameScene: SKScene {
         self.backgroundColor = darkBrownColor;
         
         self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
-        
-        
         
     }
     var lastPoint = CGPoint(x: 0, y: 0)
@@ -97,7 +102,8 @@ class GameScene: SKScene {
         lineNode.lineWidth = 4
         lineNode.strokeColor = UIColor.redColor()
         lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
-        lineNode.physicsBody?.friction = 1.0
+        lineNode.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
+        lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
         self.addChild(lineNode)
         ref = CGPathCreateMutable()
         print(pathLength)
