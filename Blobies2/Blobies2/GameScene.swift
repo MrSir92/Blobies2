@@ -19,20 +19,21 @@ class GameScene: SKScene {
         
          /* Setup your scene here */
         
-        self.anchorPoint = CGPointMake(0.16, 0);
+        self.anchorPoint = CGPointMake(0, 0);
         
         self.TheLevel = Level(progress: 1);
         TheLevel.position = CGPoint(x: 0, y: 0)
         addChild(TheLevel);
         
         let darkBrownColor = UIColor(red:0.4, green:0.3, blue:0.2, alpha:1);
-        let lightBrownColor = UIColor(red:0.6, green:0.5, blue:0.4, alpha:1);
+        //let lightBrownColor = UIColor(red:0.6, green:0.5, blue:0.4, alpha:1);
         
         self.backgroundColor = darkBrownColor;
         
-        self.TheLevel.spawnBlobNode(CGPoint(x: 50, y: 150))
+        self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
         
     }
+    var lastPoint = CGPoint(x: 0, y: 0)
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        /* Called when a touch begins */
         
@@ -40,6 +41,8 @@ class GameScene: SKScene {
             let location = touch.locationInNode(self)
             
             CGPathMoveToPoint(ref , nil, location.x, location.y)
+            lastPoint.x = location.x
+            lastPoint.y = location.y
             // Select the sprite where the touch occurred.
             var isSprite = checkIfNodeIsSprite(location)
             
@@ -54,6 +57,7 @@ class GameScene: SKScene {
         }
     }
     var ref = CGPathCreateMutable()
+    var pathLength = Float(0)
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         var touch =  touches.first
         
@@ -68,9 +72,17 @@ class GameScene: SKScene {
             //latest subpath and end the for-loop.
             
             for touch: AnyObject in touches {
-                let locationInScene = touch.locationInNode(self)
-                CGPathAddLineToPoint(ref, nil, positionInScene.x, positionInScene.y)
-                
+                if (pathLength < Float(100)) {
+                    let locationInScene = touch.locationInNode(self)
+                    CGPathAddLineToPoint(ref, nil, positionInScene.x, positionInScene.y)
+                    
+                    let offset = CGPointMake(lastPoint.x - positionInScene.x, lastPoint.y - positionInScene.y)
+                    let length = sqrtf(Float(offset.x * offset.x + offset.y * offset.y))
+                    pathLength = pathLength + length
+                    
+                    lastPoint.x = positionInScene.x
+                    lastPoint.y = positionInScene.y
+                }
             }
             
         }
@@ -80,11 +92,13 @@ class GameScene: SKScene {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         var lineNode = SKShapeNode();
         lineNode.path = ref
-        lineNode.lineWidth = 8
+        lineNode.lineWidth = 4
         lineNode.strokeColor = UIColor.redColor()
         lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
         self.addChild(lineNode)
         ref = CGPathCreateMutable()
+        print(pathLength)
+        pathLength = Float(0)
     }
     
     
@@ -98,5 +112,6 @@ class GameScene: SKScene {
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        TheLevel.moveCamera(-210);
     }
 }

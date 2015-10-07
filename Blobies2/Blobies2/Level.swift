@@ -28,7 +28,7 @@ class Level: SKNode {
         switch(progress){
         case 1:
             
-            let darkBrownColor = UIColor(red:0.4, green:0.3, blue:0.2, alpha:1);
+            //let darkBrownColor = UIColor(red:0.4, green:0.3, blue:0.2, alpha:1);
             let lightBrownColor = UIColor(red:0.6, green:0.5, blue:0.4, alpha:1);
             //self.backgroundColor = darkBrownColor;
             let roof1 = SKShapeNode(rectOfSize: CGSize(width: 150, height: 300));
@@ -117,9 +117,9 @@ class Level: SKNode {
         //println(cameraPositionInScene);
         
         let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: World)
-        print(cameraPositionInScene)
+        //print(cameraPositionInScene)
         
-        node.parent!.runAction(SKAction.moveTo(CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y), duration: 1))
+        node.parent!.runAction(SKAction.moveTo(CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y), duration: 0.1))
         
         
         /*node.parent!.position = CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y)

@@ -406,6 +406,7 @@
 				97E971F81BC506A00029A443 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		97E971F91BC506A00029A443 /* Build configuration list for PBXNativeTarget "Blobies2Tests" */ = {
 			isa = XCConfigurationList;
@@ -414,6 +415,7 @@
 				97E971FB1BC506A00029A443 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
