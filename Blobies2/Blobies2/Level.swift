@@ -149,6 +149,7 @@ class Level: SKNode {
         sprite.physicsBody?.linearDamping = 0.2
         sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
         sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
+        sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
         sprite.name = "Blobie1"
         self.addChild(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)

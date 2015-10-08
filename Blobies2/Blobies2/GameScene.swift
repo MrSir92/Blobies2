@@ -118,8 +118,8 @@ class GameScene: SKScene {
         lineNode.strokeColor = UIColor.redColor()
         lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
         lineNode.physicsBody?.friction = 5.0
-        lineNode.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
-        lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
+        lineNode.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
+        lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
         self.addChild(lineNode)
         ref = CGPathCreateMutable()
         print(pathLength)
