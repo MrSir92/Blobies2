@@ -13,6 +13,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var TheLevel: Level!
     var globalBool: Bool = false
+    var smudgeDestroyer: Bool = false
+    var smudgeToBeDestroyed: SKShapeNode!
+    var saveSmudge: Bool = false
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -72,11 +75,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lastPoint.y = location.y
             // Select the sprite where the touch occurred.
             var isSprite = checkIfNodeIsSprite(location)
+            var isSmudge = checkIfNodeIsSmudge(location)
             
             if (isSprite) {
                 self.globalBool = true;
                 
-            } else {
+            } else if(isSmudge) {
+                var toWait = SKAction.waitForDuration(1.5)
+                var toRun = SKAction.runBlock {
+                    if (!self.saveSmudge) {
+                        self.smudgeDestroyer = true
+                    } else {
+                        self.saveSmudge = false
+                    }
+                }
+                self.runAction(SKAction.sequence([toWait, toRun]))
+            }else {
                 self.globalBool = false;
             }
             
@@ -117,18 +131,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        var lineNode = SKShapeNode();
-        lineNode.path = ref
-        lineNode.lineWidth = 4
-        lineNode.strokeColor = UIColor.redColor()
-        lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
-        lineNode.physicsBody?.friction = 5.0
-        lineNode.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
-        lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
-        self.addChild(lineNode)
+        if (self.globalBool) {
+            var lineNode = SKShapeNode();
+            lineNode.path = ref
+            lineNode.lineWidth = 4
+            lineNode.name = "Smudge"
+            lineNode.strokeColor = UIColor.redColor()
+            lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
+            lineNode.physicsBody?.friction = 5.0
+            lineNode.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
+            lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
+            self.addChild(lineNode)
+        }
         ref = CGPathCreateMutable()
+        
         //print(pathLength)
         pathLength = Float(0)
+        if (smudgeDestroyer) {
+            smudgeToDie(smudgeToBeDestroyed)
+            smudgeDestroyer = false
+        } else {
+            self.saveSmudge = true
+        }
     }
     
     
@@ -140,9 +164,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return false
     }
     
+    func checkIfNodeIsSmudge(location: CGPoint) ->Bool {
+        if let touchedNode = self.nodeAtPoint(location) as? SKShapeNode {
+            if (touchedNode.name == "Smudge") {
+                self.smudgeToBeDestroyed = touchedNode
+                print("Selected Smudge")
+                return true
+            }
+            return false
+        }
+        return false
+    }
+    
     func blobToDie(blob: SKSpriteNode) {
         //Kill the blob here.
         print("blob just died!...")
+    }
+    
+    func smudgeToDie(smudge: SKShapeNode) {
+        //kill the smudge here.
+        print("smudge just got destroyed...")
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -161,11 +202,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 blobToDie(contact.bodyB.node as! SKSpriteNode)
             }
             
+        
         default:
-            
+            print("error?...")
             // Nobody expects this, so satisfy the compiler and catch
             // ourselves if we do something we didn't plan to
-            fatalError("other collision: \(contactMask)")
+            //fatalError("other collision: \(contactMask)")
         }
     }
     

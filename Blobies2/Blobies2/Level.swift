@@ -13,6 +13,7 @@ class Level: SKNode {
     
     var Camera: SKNode!
     var World: SKNode!
+    var Blobies: [BlobNode]!
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -24,6 +25,7 @@ class Level: SKNode {
     
     convenience init(progress: Int) {
         self.init();
+        
         
         self.World = SKNode()
         self.World.name = "World"
@@ -162,6 +164,7 @@ class Level: SKNode {
         sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
         sprite.name = "Blobie1"
         self.addChild(sprite)
+        //self.Blobies.append(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
         sprite.runAction(SKAction.moveByX(10000, y: 0, duration: 1000))
     }
