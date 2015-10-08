@@ -9,7 +9,7 @@
 import SpriteKit
 
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var TheLevel: Level!
     var globalBool: Bool = false
@@ -19,12 +19,15 @@ class GameScene: SKScene {
         case Smudge = 4
         case Start = 8
         case Finish = 16
+        case Death = 32
     }
     
     
     override func didMoveToView(view: SKView) {
         
          /* Setup your scene here */
+        
+        physicsWorld.contactDelegate = self
         
         self.anchorPoint = CGPointMake(0, 0);
         
@@ -54,6 +57,8 @@ class GameScene: SKScene {
             
         
     }
+    
+    
     
     var lastPoint = CGPoint(x: 0, y: 0)
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -122,7 +127,7 @@ class GameScene: SKScene {
         lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
         self.addChild(lineNode)
         ref = CGPathCreateMutable()
-        print(pathLength)
+        //print(pathLength)
         pathLength = Float(0)
     }
     
@@ -134,6 +139,36 @@ class GameScene: SKScene {
         }
         return false
     }
+    
+    func blobToDie(blob: SKSpriteNode) {
+        //Kill the blob here.
+        print("blob just died!...")
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        print("contact!")
+        
+        // Step 1. Bitiwse OR the bodies' categories to find out what kind of contact we have
+        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        switch contactMask {
+            
+        case CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue:
+            
+            // Step 2. Disambiguate the bodies in the contact
+            if contact.bodyA.categoryBitMask == CollisionTypes.Blob.rawValue {
+                blobToDie(contact.bodyA.node as! SKSpriteNode)
+            } else {
+                blobToDie(contact.bodyB.node as! SKSpriteNode)
+            }
+            
+        default:
+            
+            // Nobody expects this, so satisfy the compiler and catch
+            // ourselves if we do something we didn't plan to
+            fatalError("other collision: \(contactMask)")
+        }
+    }
+    
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */

@@ -19,6 +19,7 @@ class Level: SKNode {
         case Smudge = 4
         case Start = 8
         case Finish = 16
+        case Death = 32
     }
     
     convenience init(progress: Int) {
@@ -111,6 +112,15 @@ class Level: SKNode {
             wall2.physicsBody?.categoryBitMask = CollisionTypes.Wall.rawValue
             World.addChild(wall2)
             print("levelstarted")
+            let deathGround = SKShapeNode(rectOfSize: CGSize(width: 1000, height: 30))
+            deathGround.name = "deathGround"
+            deathGround.position = CGPoint(x: 500, y: 10)
+            deathGround.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 1000, height: 30))
+            deathGround.physicsBody?.dynamic = false
+            deathGround.alpha = 0
+            deathGround.physicsBody?.categoryBitMask = CollisionTypes.Death.rawValue
+            deathGround.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
+            World.addChild(deathGround)
         default:
             print("wrong level")
         }
@@ -148,7 +158,7 @@ class Level: SKNode {
         sprite.physicsBody!.allowsRotation = false
         sprite.physicsBody?.linearDamping = 0.2
         sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
-        sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
+        sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
         sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
         sprite.name = "Blobie1"
         self.addChild(sprite)
