@@ -48,13 +48,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         TheLevel.moveCamera(-210);
 
-        self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
+        self.spawnBlobNode(CGPoint(x: 250, y: 200))
         var blobCount = 1
         
         var wait = SKAction.waitForDuration(4)
         var run = SKAction.runBlock {
-            if (blobCount < 5) {
-                self.TheLevel.spawnBlobNode(CGPoint(x: 250, y: 200))
+            if (blobCount < 10) {
+                self.spawnBlobNode(CGPoint(x: 250, y: 200))
                 blobCount++
             }
         }
@@ -195,13 +195,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func blobToDie(blob: SKSpriteNode) {
         //Kill the blob here.
-        print("blob just died!...")
+        //print("blob just died!...")
         blob.removeFromParent()
     }
     
     func smudgeToDie(smudge: SKShapeNode) {
         //kill the smudge here.
-        print("smudge just got destroyed...")
+        //print("smudge just got destroyed...")
         smudge.removeFromParent()
     }
     var useless = 0
@@ -229,9 +229,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    var blobies: [BlobNode] = []
+    
+    func spawnBlobNode(point: CGPoint) {
+        let sprite = BlobNode.blob(point)
+        sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height/2)
+        sprite.physicsBody!.allowsRotation = false
+        sprite.physicsBody?.linearDamping = 0.2
+        sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
+        sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
+        sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
+        sprite.name = "Blobie1"
+        self.addChild(sprite)
+        self.blobies.append(sprite)
+        physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
+        sprite.runAction(SKAction.moveByX(10000, y: 0, duration: 1000))
+    }
+    
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        
+        //if let toWrite = self.blobies {
+            print(self.blobies)
+        //}
     }
 }

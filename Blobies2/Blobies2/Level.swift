@@ -13,7 +13,6 @@ class Level: SKNode {
     
     var Camera: SKNode!
     var World: SKNode!
-    var Blobies: [BlobNode]!
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -154,19 +153,6 @@ class Level: SKNode {
         */
     }
     
-    func spawnBlobNode(point: CGPoint) {
-        let sprite = BlobNode.blob(point)
-        sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height/2)
-        sprite.physicsBody!.allowsRotation = false
-        sprite.physicsBody?.linearDamping = 0.2
-        sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
-        sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
-        sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
-        sprite.name = "Blobie1"
-        self.addChild(sprite)
-        //self.Blobies.append(sprite)
-        physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
-        sprite.runAction(SKAction.moveByX(10000, y: 0, duration: 1000))
-    }
+    
     
 }
