@@ -14,8 +14,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var TheLevel: Level!
     var globalBool: Bool = false
     var smudgeDestroyer: Bool = false
+    var blobDestroyer: Bool = false
     var smudgeToBeDestroyed: SKShapeNode!
+    var blobToBeDestroyed: SKSpriteNode!
     var saveSmudge: Bool = false
+    var smudges: [SKShapeNode]!
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -79,14 +82,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if (isSprite) {
                 self.globalBool = true;
-                
+                var bWait = SKAction.waitForDuration(0)
+                var bRun = SKAction.runBlock {
+                    self.blobDestroyer = true
+                }
+                self.runAction(SKAction.sequence([bWait, bRun]))
             } else if(isSmudge) {
                 var toWait = SKAction.waitForDuration(1.5)
                 var toRun = SKAction.runBlock {
+                    print(self.smudgeDestroyer)
                     if (!self.saveSmudge) {
                         self.smudgeDestroyer = true
+                        print(self.smudgeDestroyer)
                     } else {
-                        self.saveSmudge = false
+                        self.smudgeDestroyer = false
                     }
                 }
                 self.runAction(SKAction.sequence([toWait, toRun]))
@@ -142,22 +151,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lineNode.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
             lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
             self.addChild(lineNode)
+            //self.smudges.append(lineNode)
+            if (self.blobDestroyer) {
+                blobToDie(blobToBeDestroyed)
+                self.blobDestroyer = false
+            }
         }
         ref = CGPathCreateMutable()
         
         //print(pathLength)
         pathLength = Float(0)
-        if (smudgeDestroyer) {
+        if (self.smudgeDestroyer) {
             smudgeToDie(smudgeToBeDestroyed)
-            smudgeDestroyer = false
+            self.smudgeDestroyer = false
         } else {
-            self.saveSmudge = true
+            print(self.smudgeDestroyer)
+            print(self.saveSmudge)
+            self.smudgeDestroyer = false
         }
     }
     
     
     func checkIfNodeIsSprite(location: CGPoint) ->Bool {
         if let touchedNode = self.nodeAtPoint(location) as? SKSpriteNode {
+            self.blobToBeDestroyed = touchedNode
             print("Selected sprite with name: " + touchedNode.name!)
             return true
         }
@@ -179,15 +196,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func blobToDie(blob: SKSpriteNode) {
         //Kill the blob here.
         print("blob just died!...")
+        blob.removeFromParent()
     }
     
     func smudgeToDie(smudge: SKShapeNode) {
         //kill the smudge here.
         print("smudge just got destroyed...")
+        smudge.removeFromParent()
     }
-    
+    var useless = 0
     func didBeginContact(contact: SKPhysicsContact) {
-        print("contact!")
         
         // Step 1. Bitiwse OR the bodies' categories to find out what kind of contact we have
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
@@ -204,7 +222,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         
         default:
-            print("error?...")
+            useless++
             // Nobody expects this, so satisfy the compiler and catch
             // ourselves if we do something we didn't plan to
             //fatalError("other collision: \(contactMask)")
