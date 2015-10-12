@@ -11,7 +11,7 @@ import SpriteKit
 
 class Level: SKNode {
     
-    var Camera: SKNode!
+
     var World: SKNode!
     enum CollisionTypes: UInt32 {
         case Blob = 1
@@ -30,9 +30,7 @@ class Level: SKNode {
         self.World.name = "World"
         addChild(self.World)
         
-        self.Camera = SKNode()
-        self.Camera.name = "Camera"
-        World.addChild(self.Camera)
+        
         
         switch(progress){
         case 1:
@@ -128,30 +126,7 @@ class Level: SKNode {
         
     }
     
-    func moveCamera(xPoint: CGFloat) {
-        //println("hoho")
-        if (self.Camera != nil) {
-            self.Camera.position = CGPoint(x: xPoint, y: 0)
-            //println("hejhopp")
-            self.centerOnNode(self.Camera)
-        }
-    }
     
-    func centerOnNode(node: SKNode) {
-        
-        //let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: World)
-        
-        //println(cameraPositionInScene);
-        
-        let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: World)
-        //print(cameraPositionInScene)
-        
-        node.parent!.runAction(SKAction.moveTo(CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y), duration: 0.1))
-        
-        
-        /*node.parent!.position = CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y)
-        */
-    }
     
     
     

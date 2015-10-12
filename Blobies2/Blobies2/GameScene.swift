@@ -12,6 +12,7 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var TheLevel: Level!
+    var theCamera: SKNode!
     var globalBool: Bool = false
     var smudgeDestroyer: Bool = false
     var blobDestroyer: Bool = false
@@ -41,12 +42,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         TheLevel.position = CGPoint(x: 0, y: 0)
         addChild(TheLevel);
         
+        //self.Camera = SKCameraNode.self
+        self.theCamera = SKNode()
+        self.theCamera.name = "Camera"
+        self.TheLevel.addChild(self.theCamera)
+
         let darkBrownColor = UIColor(red:0.4, green:0.3, blue:0.2, alpha:1);
         //let lightBrownColor = UIColor(red:0.6, green:0.5, blue:0.4, alpha:1);
         
         self.backgroundColor = darkBrownColor;
         
-        TheLevel.moveCamera(-210);
+        moveCamera(-210);
 
         self.spawnBlobNode(CGPoint(x: 250, y: 200))
         var blobCount = 1
@@ -64,6 +70,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+
     
     
     var lastPoint = CGPoint(x: 0, y: 0)
@@ -115,6 +122,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var positionInScene = touch!.locationInNode(self)
         
         if (self.globalBool) {
+            var tempVar = 0
             //TODO: Set the lengthlimit.
             //TODO: Check if the lengthlimit has been reached:
             //TODO: After each for-loop, check how long the subpath is.
@@ -146,10 +154,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lineNode.lineWidth = 4
             lineNode.name = "Smudge"
             lineNode.strokeColor = UIColor.redColor()
-            lineNode.physicsBody = SKPhysicsBody(polygonFromPath: ref)
+            lineNode.physicsBody = SKPhysicsBody(edgeChainFromPath: ref)
+            //Få till så en Smudge kan falla...
+            lineNode.physicsBody?.mass = 1.0
+            lineNode.physicsBody?.dynamic = true
             lineNode.physicsBody?.friction = 5.0
+            
             lineNode.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
             lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
+            lineNode.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue | CollisionTypes.Blob.rawValue
             self.addChild(lineNode)
             //self.smudges.append(lineNode)
             if (self.blobDestroyer) {
@@ -244,6 +257,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.blobies.append(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
         sprite.runAction(SKAction.moveByX(10000, y: 0, duration: 1000))
+    }
+    
+    func moveCamera(xPoint: CGFloat) {
+        //println("hoho")
+        if (self.theCamera != nil) {
+            self.theCamera.position = CGPoint(x: xPoint, y: 0)
+            //println("hejhopp")
+            self.centerOnNode(self.theCamera)
+        }
+    }
+    
+    func centerOnNode(node: SKNode) {
+        
+        //let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: World)
+        
+        //println(cameraPositionInScene);
+        
+        let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: self.TheLevel)
+        //print(cameraPositionInScene)
+        
+        node.parent!.runAction(SKAction.moveTo(CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y), duration: 0.1))
+        
+        
+        /*node.parent!.position = CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y)
+        */
     }
     
    
