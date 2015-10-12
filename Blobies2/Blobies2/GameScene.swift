@@ -332,14 +332,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         //if let toWrite = self.blobies {
-<<<<<<< Updated upstream
             print(self.blobies)
         for index in blobies{
             index.Update()
         }
-=======
             //print(self.blobies)
->>>>>>> Stashed changes
         //}
     }
 

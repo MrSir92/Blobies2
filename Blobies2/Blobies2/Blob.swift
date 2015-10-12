@@ -61,8 +61,9 @@ class BlobNode: SKSpriteNode {
         if positions.count > 8{
             if sum/CGFloat(positions.count) < positions[0] + buffer
                 && sum/CGFloat(positions.count) > positions[0] - buffer {
-                
+                positions.removeAll()
                 return true
+
                 
             }
             else{
