@@ -164,7 +164,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             var positionInScene = touch!.locationInNode(self)
             for touch: AnyObject in touches {
                     let locationInScene = touch.locationInNode(self)
-                    CGPathAddLineToPoint(ref, nil, positionInScene.x, positionInScene.y)
+                    //CGPathAddLineToPoint(ref, nil, positionInScene.x, positionInScene.y)
                     
                     let toMove = CGFloat(positionInScene.x - lastPoint.x)
                 lastPoint.x = positionInScene.x
@@ -285,7 +285,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.TheLevel.addChild(sprite)
         self.blobies.append(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
-        sprite.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 100))
+        sprite.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 50))
     }
     
     func moveCameraToSpawn(position: CGPoint) {
@@ -301,7 +301,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let winSize = self.size
             
             var currentX = self.theCamera.position.x
-            var newX = currentX + distance
+            var newX = currentX - distance
             var newPosition = CGPoint(x: newX, y: 150)
             newPosition.x = CGFloat(min(newPosition.x, 410))
             newPosition.x = CGFloat(max(newPosition.x, 80))
@@ -332,11 +332,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         //if let toWrite = self.blobies {
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             print(self.blobies)
         for index in blobies{
             index.Update()
         }
+<<<<<<< Updated upstream
             //print(self.blobies)
+=======
+
+            //print(self.blobies)
+
+>>>>>>> Stashed changes
         //}
     }
 
