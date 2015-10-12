@@ -18,6 +18,7 @@
 		97E971FF1BC506E20029A443 /* old in Resources */ = {isa = PBXBuildFile; fileRef = 97E971FE1BC506E20029A443 /* old */; settings = {ASSET_TAGS = (); }; };
 		97E972011BC5073B0029A443 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E972001BC5073B0029A443 /* Level.swift */; settings = {ASSET_TAGS = (); }; };
 		97E972031BC507480029A443 /* Blob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E972021BC507480029A443 /* Blob.swift */; settings = {ASSET_TAGS = (); }; };
+		DB7971F81BCBCDE1003EFA86 /* CameraHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7971F71BCBCDE1003EFA86 /* CameraHandler.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		97E971FE1BC506E20029A443 /* old */ = {isa = PBXFileReference; lastKnownFileType = folder; path = old; sourceTree = "<group>"; };
 		97E972001BC5073B0029A443 /* Level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
 		97E972021BC507480029A443 /* Blob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blob.swift; sourceTree = "<group>"; };
+		DB7971F71BCBCDE1003EFA86 /* CameraHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				97E971E81BC506A00029A443 /* Info.plist */,
 				97E972001BC5073B0029A443 /* Level.swift */,
 				97E972021BC507480029A443 /* Blob.swift */,
+				DB7971F71BCBCDE1003EFA86 /* CameraHandler.swift */,
 			);
 			path = Blobies2;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				97E971DD1BC506A00029A443 /* GameScene.swift in Sources */,
 				97E971DF1BC506A00029A443 /* GameViewController.swift in Sources */,
 				97E972031BC507480029A443 /* Blob.swift in Sources */,
+				DB7971F81BCBCDE1003EFA86 /* CameraHandler.swift in Sources */,
 				97E972011BC5073B0029A443 /* Level.swift in Sources */,
 				97E971D91BC506A00029A443 /* AppDelegate.swift in Sources */,
 			);

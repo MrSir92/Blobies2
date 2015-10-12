@@ -8,11 +8,10 @@
 
 import SpriteKit
 
-
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var TheLevel: Level!
-    var theCamera: SKNode!
+    var theCamera: SKCameraNode!
     var globalBool: Bool = false
     var smudgeDestroyer: Bool = false
     var blobDestroyer: Bool = false
@@ -20,6 +19,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var blobToBeDestroyed: SKSpriteNode!
     var saveSmudge: Bool = false
     var smudges: [SKShapeNode]!
+    var TwoFingers: Bool = false
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -43,29 +43,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(TheLevel);
         
         //self.Camera = SKCameraNode.self
-        self.theCamera = SKNode()
+        self.theCamera = SKCameraNode()
         self.theCamera.name = "Camera"
         self.TheLevel.addChild(self.theCamera)
+        self.theCamera.position = CGPoint(x: 80, y: 150)
+        self.camera = self.theCamera
 
         let darkBrownColor = UIColor(red:0.4, green:0.3, blue:0.2, alpha:1);
         //let lightBrownColor = UIColor(red:0.6, green:0.5, blue:0.4, alpha:1);
         
         self.backgroundColor = darkBrownColor;
         
-        moveCamera(-210);
+        //moveCameraToSpawn(CGPoint(x: -210, y: 0))
 
-        self.spawnBlobNode(CGPoint(x: 250, y: 200))
+        self.spawnBlobNode(CGPoint(x: 50, y: 200))
         var blobCount = 1
         
         var wait = SKAction.waitForDuration(4)
         var run = SKAction.runBlock {
             if (blobCount < 10) {
-                self.spawnBlobNode(CGPoint(x: 250, y: 200))
+                self.spawnBlobNode(CGPoint(x: 50, y: 200))
                 blobCount++
             }
         }
         
-            self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+        self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
             
         
     }
@@ -76,7 +78,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var lastPoint = CGPoint(x: 0, y: 0)
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        /* Called when a touch begins */
-        
+        var i = 0
+        print(touches.count)
+
+        if (touches.count < 2) {
         for touch in touches {
             let location = touch.locationInNode(self)
             
@@ -109,14 +114,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }else {
                 self.globalBool = false;
             }
-            
-            
+        }
+        } else {
+            for touch in touches {
+            self.TwoFingers = true
+            let location = touch.locationInNode(self)
+            lastPoint.x = location.x
+            lastPoint.y = location.y
+            }
         }
     }
     var ref = CGPathCreateMutable()
     var pathLength = Float(0)
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+
         var touch =  touches.first
+        
+        if(!TwoFingers) {
+        
+        
         
         //var positionInScene = touch.locationInNode(self)
         var positionInScene = touch!.locationInNode(self)
@@ -143,6 +159,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
             
+        }
+        } else {
+            var positionInScene = touch!.locationInNode(self)
+            for touch: AnyObject in touches {
+                    let locationInScene = touch.locationInNode(self)
+                    CGPathAddLineToPoint(ref, nil, positionInScene.x, positionInScene.y)
+                    
+                    let toMove = CGFloat(positionInScene.x - lastPoint.x)
+                lastPoint.x = positionInScene.x
+                    
+                    moveCamera(toMove)
+                
+            }
         }
     }
     
@@ -253,18 +282,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
         sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
         sprite.name = "Blobie1"
-        self.addChild(sprite)
+        self.TheLevel.addChild(sprite)
         self.blobies.append(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
-        sprite.runAction(SKAction.moveByX(10000, y: 0, duration: 1000))
+        sprite.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 100))
     }
     
-    func moveCamera(xPoint: CGFloat) {
+    func moveCameraToSpawn(position: CGPoint) {
+        if (self.theCamera != nil) {
+            self.theCamera.position = CGPoint(x: position.x, y: position.y)
+            self.centerOnNode(self.theCamera)
+        }
+    }
+    
+    func moveCamera(distance: CGFloat) {
         //println("hoho")
         if (self.theCamera != nil) {
-            self.theCamera.position = CGPoint(x: xPoint, y: 0)
+            let winSize = self.size
+            
+            var currentX = self.theCamera.position.x
+            var newX = currentX + distance
+            var newPosition = CGPoint(x: newX, y: 150)
+            newPosition.x = CGFloat(min(newPosition.x, 410))
+            newPosition.x = CGFloat(max(newPosition.x, 80))
+            self.theCamera.position = CGPoint(x: newPosition.x, y: 150)
             //println("hejhopp")
-            self.centerOnNode(self.theCamera)
+            //self.centerOnNode(self.theCamera)
         }
     }
     
@@ -277,7 +320,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let cameraPositionInScene: CGPoint = node.scene!.convertPoint(node.position, fromNode: self.TheLevel)
         //print(cameraPositionInScene)
         
-        node.parent!.runAction(SKAction.moveTo(CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y), duration: 0.1))
+        node.parent!.runAction(SKAction.moveTo(CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y), duration: 0.0))
+        
         
         
         /*node.parent!.position = CGPoint(x:node.parent!.position.x - cameraPositionInScene.x, y:node.parent!.position.y - cameraPositionInScene.y)
@@ -288,10 +332,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         //if let toWrite = self.blobies {
+<<<<<<< Updated upstream
             print(self.blobies)
         for index in blobies{
             index.Update()
         }
+=======
+            //print(self.blobies)
+>>>>>>> Stashed changes
         //}
     }
+
+
 }
