@@ -289,6 +289,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Called before each frame is rendered */
         //if let toWrite = self.blobies {
             print(self.blobies)
+        for index in blobies{
+            index.Update()
+        }
         //}
     }
 }
