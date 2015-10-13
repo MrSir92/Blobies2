@@ -57,6 +57,9 @@ class BlobNode: SKSpriteNode {
         positions.insert(position, atIndex: 0)
         
         sum = positions.reduce(0, combine: +)
+        //print("----------------------")
+        //print(sum/CGFloat(positions.count))
+        //print("----------------------")
         
         if positions.count > 8{
             if sum/CGFloat(positions.count) < positions[0] + buffer

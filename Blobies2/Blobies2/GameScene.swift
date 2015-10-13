@@ -68,7 +68,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
-            
+        
+        //let gestureRecognizer = UIPanGestureRecognizer(target: self, action: ("handlePanFrom:"))
+        //self.view!.addGestureRecognizer(gestureRecognizer)
         
     }
     
@@ -80,6 +82,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
        /* Called when a touch begins */
         var i = 0
         print(touches.count)
+        let firstTouch = touches.first
 
         if (touches.count < 2) {
         for touch in touches {
@@ -118,7 +121,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             for touch in touches {
             self.TwoFingers = true
-            let location = touch.locationInNode(self)
+            let location = firstTouch!.locationInNode(self)
             lastPoint.x = location.x
             lastPoint.y = location.y
             }
@@ -161,19 +164,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         } else {
-            var positionInScene = touch!.locationInNode(self)
+            let positionInScene = touch!.locationInNode(self)
             for touch: AnyObject in touches {
+                
                     let locationInScene = touch.locationInNode(self)
                     //CGPathAddLineToPoint(ref, nil, positionInScene.x, positionInScene.y)
-                    
+                
+                    //let toMove = CGFloat(lastPoint.x - positionInScene.x)
                     let toMove = CGFloat(positionInScene.x - lastPoint.x)
                 lastPoint.x = positionInScene.x
-                    
-                    moveCamera(toMove)
+                    //lastPoint.x = self.theCamera.position.x
+                    moveCamera(toMove/3)
                 
             }
         }
     }
+    
+    /*func handlePanFrom(recognizer: UIPanGestureRecognizer) {
+
+                    let pos = self.theCamera.position
+                var translation = recognizer.translationInView(recognizer.view!)
+                    translation = CGPoint(x: translation.x, y: -translation.y)
+                    // This just multiplies your velocity with the scroll duration.
+                    let p = CGPoint(x: velocity.x * CGFloat(scrollDuration), y: velocity.y * CGFloat(scrollDuration))
+                    
+                    var newPos = CGPoint(x: pos.x + p.x, y: pos.y + p.y)
+                    moveCamera(newPos.x)
+
+        
+    }*/
     
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -211,6 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print(self.saveSmudge)
             self.smudgeDestroyer = false
         }
+        lastPoint.x = (self.view?.center.x)!
     }
     
     
@@ -298,13 +318,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func moveCamera(distance: CGFloat) {
         //println("hoho")
         if (self.theCamera != nil) {
-            let winSize = self.size
+            //let winSize = self.size
             
-            var currentX = self.theCamera.position.x
-            var newX = currentX - distance
+            let currentX = self.theCamera.position.x
+            let newX = currentX - distance
             var newPosition = CGPoint(x: newX, y: 150)
             newPosition.x = CGFloat(min(newPosition.x, 410))
             newPosition.x = CGFloat(max(newPosition.x, 80))
+            let time = Double(distance)/2
+            print("----------")
+            print(newX)
+            print(self.theCamera.position)
+            /*if (newX > 80){
+                
+                if (newX < 410) {
+                    self.theCamera.runAction(SKAction.moveByX(distance, y: 0, duration: time))
+                }
+            }*/
+                //(CGPoint(x: newPosition.x, y: 150), duration: 0))
+            print("----------")
+            print(self.theCamera.position)
+            print("----------")
             self.theCamera.position = CGPoint(x: newPosition.x, y: 150)
             //println("hejhopp")
             //self.centerOnNode(self.theCamera)
@@ -332,21 +366,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         //if let toWrite = self.blobies {
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
-            print(self.blobies)
+            //	print(self.blobies)
         for index in blobies{
             index.Update()
         }
-<<<<<<< Updated upstream
             //print(self.blobies)
-=======
+
 
             //print(self.blobies)
 
->>>>>>> Stashed changes
         //}
     }
 
