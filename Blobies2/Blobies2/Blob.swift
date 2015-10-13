@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class BlobNode: SKSpriteNode {
+public class BlobNode: SKSpriteNode {
     
     //internal var positions: [CGFloat?] = [CGFloat(0)]
     
@@ -18,7 +18,7 @@ class BlobNode: SKSpriteNode {
     internal var distance = CGFloat(10000)
     internal var duration = NSTimeInterval(1000)
     
-    class func blob(location: CGPoint) -> BlobNode {
+    public class func blob(location: CGPoint) -> BlobNode {
         let sprite = BlobNode(imageNamed:"blob.png")
         
         sprite.xScale = 0.075
@@ -29,12 +29,25 @@ class BlobNode: SKSpriteNode {
         return sprite
     }
     
-    func Update(){
+    func Update() -> Bool{
         
         if checkWallCollide(self.position.x){
-            flipDirection()
+            //flipDirection()
+            return true
+        } else {
+            return false
         }
         
+    }
+    
+    func switchDistance() {
+        self.distance = self.distance * -1
+    }
+    
+
+    
+    func getDistance() -> CGFloat {
+        return self.distance
     }
     
     func flipDirection(){
@@ -47,24 +60,24 @@ class BlobNode: SKSpriteNode {
         
         var sum = CGFloat(0)
         
-        let buffer = CGFloat(3)
+        let buffer = CGFloat(1)
         
         
-        if positions.count == 10{
+        if self.positions.count == 10{
             positions.removeAtIndex(9)
         }
         
-        positions.insert(position, atIndex: 0)
+        self.positions.insert(position, atIndex: 0)
         
-        sum = positions.reduce(0, combine: +)
-        //print("----------------------")
-        //print(sum/CGFloat(positions.count))
-        //print("----------------------")
+        sum = self.positions.reduce(0, combine: +)
+        print("----------------------")
+        print(sum/CGFloat(self.positions.count))
+        print("----------------------")
         
-        if positions.count > 8{
-            if sum/CGFloat(positions.count) < positions[0] + buffer
-                && sum/CGFloat(positions.count) > positions[0] - buffer {
-                positions.removeAll()
+        if self.positions.count > 8{
+            if sum/CGFloat(self.positions.count) < self.positions[0] + buffer
+                && sum/CGFloat(self.positions.count) > self.positions[0] - buffer {
+                self.positions.removeAll()
                 return true
 
                 

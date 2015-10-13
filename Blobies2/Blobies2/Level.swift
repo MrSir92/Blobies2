@@ -38,6 +38,11 @@ class Level: SKNode {
             //let darkBrownColor = UIColor(red:0.4, green:0.3, blue:0.2, alpha:1);
             let lightBrownColor = UIColor(red:0.6, green:0.5, blue:0.4, alpha:1);
             //self.backgroundColor = darkBrownColor;
+            let spawnPoint = SKShapeNode(rectOfSize: CGSize(width: 30, height: 200))
+            spawnPoint.name = "spawnPoint"
+            spawnPoint.fillColor = SKColor(red: 0, green: 0.7, blue: 0, alpha: 1)
+            spawnPoint.position = CGPoint(x: 50, y: 310)
+            World.addChild(spawnPoint)
             let roof1 = SKShapeNode(rectOfSize: CGSize(width: 150, height: 300));
             roof1.name = "roof1";
             roof1.fillColor = lightBrownColor;
@@ -120,6 +125,16 @@ class Level: SKNode {
             deathGround.physicsBody?.categoryBitMask = CollisionTypes.Death.rawValue
             deathGround.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
             World.addChild(deathGround)
+            let finishLine = SKShapeNode(rectOfSize: CGSize(width: 30, height: 30))
+            finishLine.name = "finishLine"
+            finishLine.position = CGPoint(x: 870, y: 140)
+            finishLine.fillColor = SKColor(red: 0.7, green: 0.7, blue: 0, alpha: 1)
+            finishLine.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 30, height: 30))
+            finishLine.physicsBody?.dynamic = false
+            finishLine.physicsBody?.categoryBitMask = CollisionTypes.Finish.rawValue
+            finishLine.physicsBody?.collisionBitMask = CollisionTypes.Blob.rawValue
+            finishLine.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
+            World.addChild(finishLine)
         default:
             print("wrong level")
         }
