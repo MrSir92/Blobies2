@@ -132,7 +132,6 @@ class Level: SKNode {
             finishLine.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: 30, height: 30))
             finishLine.physicsBody?.dynamic = false
             finishLine.physicsBody?.categoryBitMask = CollisionTypes.Finish.rawValue
-            finishLine.physicsBody?.collisionBitMask = CollisionTypes.Blob.rawValue
             finishLine.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue
             World.addChild(finishLine)
         default:

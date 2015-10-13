@@ -82,7 +82,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
        /* Called when a touch begins */
         var i = 0
-        print(touches.count)
+        //print(touches.count)
         let firstTouch = touches.first
 
         if (touches.count < 2) {
@@ -104,12 +104,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
                 self.runAction(SKAction.sequence([bWait, bRun]))
             } else if(isSmudge) {
-                var toWait = SKAction.waitForDuration(1.5)
+                var toWait = SKAction.waitForDuration(1)
                 var toRun = SKAction.runBlock {
-                    print(self.smudgeDestroyer)
+                    //print(self.smudgeDestroyer)
                     if (!self.saveSmudge) {
                         self.smudgeDestroyer = true
-                        print(self.smudgeDestroyer)
+                        //print(self.smudgeDestroyer)
                     } else {
                         self.smudgeDestroyer = false
                     }
@@ -228,8 +228,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             smudgeToDie(smudgeToBeDestroyed)
             self.smudgeDestroyer = false
         } else {
-            print(self.smudgeDestroyer)
-            print(self.saveSmudge)
+            //print(self.smudgeDestroyer)
+            //print(self.saveSmudge)
             self.smudgeDestroyer = false
         }
         lastPoint.x = (self.view?.center.x)!
@@ -292,7 +292,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 blobToDie(contact.bodyB.node as! SKSpriteNode)
             }
             self.points++
-            print(points)
+            print("Your total points are:" + String(points))
         
         default:
             useless++
@@ -312,7 +312,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
         sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
         sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
-        sprite.name = "Blobie1"
+        sprite.name = "Blobie"
         self.TheLevel.addChild(sprite)
         self.blobies.append(sprite)
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
