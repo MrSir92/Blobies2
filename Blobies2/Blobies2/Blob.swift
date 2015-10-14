@@ -26,7 +26,6 @@ public class BlobNode: SKSpriteNode {
         sprite.xScale = 0.075
         sprite.yScale = 0.075
         sprite.position = location
-        sprite.physicsBody = SKPhysicsBody(circleOfRadius: 20)
         let distanceToMove = 1000
         let moveduration = 500
         return sprite
