@@ -95,7 +95,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Select the sprite where the touch occurred.
             var isSprite = checkIfNodeIsSprite(location)
             var isSmudge = checkIfNodeIsSmudge(location)
-            
+
             if (isSprite) {
                 self.globalBool = true;
                 var bWait = SKAction.waitForDuration(0)
@@ -103,6 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.blobDestroyer = true
                 }
                 self.runAction(SKAction.sequence([bWait, bRun]))
+
             } else if(isSmudge) {
                 var toWait = SKAction.waitForDuration(1)
                 var toRun = SKAction.runBlock {
@@ -112,6 +113,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         //print(self.smudgeDestroyer)
                     } else {
                         self.smudgeDestroyer = false
+                        self.saveSmudge = false
                     }
                 }
                 self.runAction(SKAction.sequence([toWait, toRun]))
@@ -230,6 +232,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             //print(self.smudgeDestroyer)
             //print(self.saveSmudge)
+            self.saveSmudge = true
             self.smudgeDestroyer = false
         }
         lastPoint.x = (self.view?.center.x)!
@@ -318,7 +321,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
         var moveDistance = CGFloat(10000)
         moveDistance = moveDistance * 1
-        sprite.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40))
+        sprite.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40)))
+        
     }
     
     func moveCameraToSpawn(position: CGPoint) {
@@ -380,9 +384,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for index in blobies{
             var toTurn = index.Update()
             if(toTurn) {
+                //index.switchDistance(index)
                 index.switchDistance()
                 var distance = index.getDistance()
-                index.runAction(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200))
+                index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200)))
             }
         }
             //print(self.blobies)
