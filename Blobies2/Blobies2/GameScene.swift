@@ -378,16 +378,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             //	print(self.blobies)
         for index in blobies{
+            index.Update(index)
+            /*
             var toTurn = index.Update()
             if(toTurn) {
                 index.switchDistance()
                 var distance = index.getDistance()
                 index.runAction(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200))
             }
+            */
         }
             //print(self.blobies)
-
-
             //print(self.blobies)
 
         //}

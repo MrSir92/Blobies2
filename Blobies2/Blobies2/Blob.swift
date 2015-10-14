@@ -29,19 +29,15 @@ public class BlobNode: SKSpriteNode {
         return sprite
     }
     
-    func Update() -> Bool{
-        
-        if checkWallCollide(self.position.x){
-            //flipDirection()
-            return true
-        } else {
-            return false
+    func Update(blob: BlobNode){
+        print(blob)
+        if checkWallCollide(blob.position.x){
+            flipDirection(blob)
         }
-        
     }
     
     func switchDistance() {
-        self.distance = self.distance * -1
+        self.distance = self.distance * CGFloat(-1)
     }
     
 
@@ -50,10 +46,10 @@ public class BlobNode: SKSpriteNode {
         return self.distance
     }
     
-    func flipDirection(){
-        distance *= -1
+    func flipDirection(blob: BlobNode){
+        blob.distance *= -1
         
-        self.runAction(SKAction.moveByX(distance, y: 0, duration: duration))
+        blob.runAction(SKAction.moveByX(distance, y: 0, duration: duration))
     }
     
     func checkWallCollide(position: CGFloat) -> Bool {
