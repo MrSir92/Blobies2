@@ -10,6 +10,8 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    
+    var blobies: [BlobNode] = []
     var TheLevel: Level!
     var theCamera: SKCameraNode!
     var globalBool: Bool = false
@@ -235,6 +237,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lastPoint.x = (self.view?.center.x)!
         self.TwoFingers = false
     }
+
+    
+    func spawnBlobNode(point: CGPoint) {
+        let blob = BlobNode.blob(point)
+        blob.name = "Blobie"
+        self.TheLevel.addChild(blob)
+        self.blobies.append(blob)
+        var moveDistance = CGFloat(10000)
+        moveDistance = moveDistance * 1
+        blob.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40))
+    }
+
     
     
     func checkIfNodeIsSprite(location: CGPoint) ->Bool {
@@ -302,24 +316,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    var blobies: [BlobNode] = []
-    
-    func spawnBlobNode(point: CGPoint) {
-        let sprite = BlobNode.blob(point)
-        sprite.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.height/2)
-        sprite.physicsBody!.allowsRotation = false
-        sprite.physicsBody?.linearDamping = 0.2
-        sprite.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
-        sprite.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
-        sprite.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
-        sprite.name = "Blobie"
-        self.TheLevel.addChild(sprite)
-        self.blobies.append(sprite)
-        physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
-        var moveDistance = CGFloat(10000)
-        moveDistance = moveDistance * 1
-        sprite.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40))
-    }
     
     func moveCameraToSpawn(position: CGPoint) {
         if (self.theCamera != nil) {
@@ -378,7 +374,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             //	print(self.blobies)
         for index in blobies{
-            index.Update(index)
+            index.Update()
             /*
             var toTurn = index.Update()
             if(toTurn) {

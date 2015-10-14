@@ -9,6 +9,15 @@
 import UIKit
 import SpriteKit
 
+enum CollisionTypes: UInt32 {
+    case Blob = 1
+    case Wall = 2
+    case Smudge = 4
+    case Start = 8
+    case Finish = 16
+    case Death = 32
+}
+
 public class BlobNode: SKSpriteNode {
     
     //internal var positions: [CGFloat?] = [CGFloat(0)]
@@ -19,20 +28,29 @@ public class BlobNode: SKSpriteNode {
     internal var duration = NSTimeInterval(1000)
     
     public class func blob(location: CGPoint) -> BlobNode {
-        let sprite = BlobNode(imageNamed:"blob.png")
+        let blob = BlobNode(imageNamed:"blob.png")
+        //physicsBody = SKPhysicsBody()
         
-        sprite.xScale = 0.075
-        sprite.yScale = 0.075
-        sprite.position = location
+        blob.physicsBody = SKPhysicsBody(circleOfRadius: blob.size.height/2)
+        blob.physicsBody!.allowsRotation = false
+        blob.physicsBody?.linearDamping = 0.2
+        blob.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
+        blob.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
+        blob.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
+        blob.physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
+        
+        blob.xScale = 0.075
+        blob.yScale = 0.075
+        blob.position = location
         let distanceToMove = 1000
         let moveduration = 500
-        return sprite
+        return blob
     }
     
-    func Update(blob: BlobNode){
-        print(blob)
-        if checkWallCollide(blob.position.x){
-            flipDirection(blob)
+    func Update(){
+        print(self)
+        if checkWallCollide(self.position.x){
+            flipDirection()
         }
     }
     
@@ -46,10 +64,10 @@ public class BlobNode: SKSpriteNode {
         return self.distance
     }
     
-    func flipDirection(blob: BlobNode){
-        blob.distance *= -1
+    func flipDirection(){
+        self.distance *= -1
         
-        blob.runAction(SKAction.moveByX(distance, y: 0, duration: duration))
+        self.runAction(SKAction.moveByX(distance, y: 0, duration: duration))
     }
     
     func checkWallCollide(position: CGFloat) -> Bool {
