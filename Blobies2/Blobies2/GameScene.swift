@@ -202,7 +202,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lineNode.path = ref
             lineNode.lineWidth = 4
             lineNode.name = "Smudge"
-            lineNode.strokeColor = UIColor.redColor()
+            lineNode.strokeColor = SKColor(red: 0.19, green: 0.84, blue: 0.94, alpha: 1)
             lineNode.physicsBody = SKPhysicsBody(edgeChainFromPath: ref)
             //Få till så en Smudge kan falla...
             lineNode.physicsBody?.mass = 1.0
