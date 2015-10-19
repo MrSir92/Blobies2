@@ -32,6 +32,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     var points = 0
     
+    var isSprite: Bool = false
+    var isSmudge: Bool = false
+    
     
     override func didMoveToView(view: SKView) {
         
@@ -86,6 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var i = 0
         //print(touches.count)
         let firstTouch = touches.first
+        self.smudgeDestroyer = false
 
         if (touches.count < 2) {
         for touch in touches {
@@ -95,25 +99,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lastPoint.x = location.x
             lastPoint.y = location.y
             // Select the sprite where the touch occurred.
-            var isSprite = checkIfNodeIsSprite(location)
-            var isSmudge = checkIfNodeIsSmudge(location)
-            
-            if (isSprite) {
+            self.isSprite = checkIfNodeIsSprite(location)
+            self.isSmudge = checkIfNodeIsSmudge(location)
+
+            if (self.isSprite) {
                 self.globalBool = true;
                 var bWait = SKAction.waitForDuration(0)
                 var bRun = SKAction.runBlock {
                     self.blobDestroyer = true
                 }
                 self.runAction(SKAction.sequence([bWait, bRun]))
-            } else if(isSmudge) {
+
+            } else if(self.isSmudge) {
                 var toWait = SKAction.waitForDuration(1)
                 var toRun = SKAction.runBlock {
                     //print(self.smudgeDestroyer)
-                    if (!self.saveSmudge) {
-                        self.smudgeDestroyer = true
+                    //print("began...")
+                    //print(self.saveSmudge)
+                    if (self.saveSmudge) {
+                        self.smudgeDestroyer = false
+                        self.saveSmudge = false
+                        
                         //print(self.smudgeDestroyer)
                     } else {
-                        self.smudgeDestroyer = false
+                        self.smudgeDestroyer = true
+                    print(self.smudgeDestroyer)
                     }
                 }
                 self.runAction(SKAction.sequence([toWait, toRun]))
@@ -204,7 +214,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lineNode.path = ref
             lineNode.lineWidth = 4
             lineNode.name = "Smudge"
-            lineNode.strokeColor = UIColor.redColor()
+            lineNode.strokeColor = SKColor(red: 0.19, green: 0.84, blue: 0.94, alpha: 1)
             lineNode.physicsBody = SKPhysicsBody(edgeChainFromPath: ref)
             //Få till så en Smudge kan falla...
             lineNode.physicsBody?.mass = 1.0
@@ -225,15 +235,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ref = CGPathCreateMutable()
         
         //print(pathLength)
+        if (self.isSmudge) {
         pathLength = Float(0)
+            print(self.smudgeDestroyer)
         if (self.smudgeDestroyer) {
             smudgeToDie(smudgeToBeDestroyed)
             self.smudgeDestroyer = false
         } else {
+            print("hejhopp")
             //print(self.smudgeDestroyer)
             //print(self.saveSmudge)
+            self.saveSmudge = true
             self.smudgeDestroyer = false
         }
+        }
+        self.isSmudge = false
+        self.isSprite = false
         lastPoint.x = (self.view?.center.x)!
         self.TwoFingers = false
     }
@@ -315,8 +332,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //fatalError("other collision: \(contactMask)")
         }
     }
-    
-    
+
+
     func moveCameraToSpawn(position: CGPoint) {
         if (self.theCamera != nil) {
             self.theCamera.position = CGPoint(x: position.x, y: position.y)
@@ -335,7 +352,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             newPosition.x = CGFloat(min(newPosition.x, 410))
             newPosition.x = CGFloat(max(newPosition.x, 80))
             let time = Double(distance)/2
-
+            
             /*if (newX > 80){
                 
                 if (newX < 410) {
@@ -378,9 +395,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             /*
             var toTurn = index.Update()
             if(toTurn) {
+                //index.switchDistance(index)
                 index.switchDistance()
                 var distance = index.getDistance()
-                index.runAction(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200))
+                index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200)))
             }
             */
         }

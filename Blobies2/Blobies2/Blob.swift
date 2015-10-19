@@ -27,6 +27,8 @@ public class BlobNode: SKSpriteNode {
     internal var distance = CGFloat(10000)
     internal var duration = NSTimeInterval(1000)
     
+    internal var goingRight = true
+    
     public class func blob(location: CGPoint) -> BlobNode {
         let blob = BlobNode(imageNamed:"blob.png")
         //physicsBody = SKPhysicsBody()
@@ -57,6 +59,20 @@ public class BlobNode: SKSpriteNode {
         self.distance = self.distance * CGFloat(-1)
     }
     
+    /*func switchDistance(index: BlobNode) {
+        if(goingRight) {
+            //self.distance = self.distance * -1
+            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: -10000, dy: 0), duration: 200)))
+            goingRight = false
+        } else {
+            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 10000, dy: 0), duration: 200)))
+            goingRight = true
+        }
+    }
+    
+    func startMove(index: BlobNode) {
+        index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200)))
+    }*/
 
     
     func getDistance() -> CGFloat {
@@ -66,14 +82,14 @@ public class BlobNode: SKSpriteNode {
     func flipDirection(){
         self.distance *= -1
         
-        self.runAction(SKAction.moveByX(distance, y: 0, duration: duration))
+        self.runAction(SKAction .repeatActionForever(SKAction.moveByX(distance, y: 0, duration: duration)))
     }
     
     func checkWallCollide(position: CGFloat) -> Bool {
         
         var sum = CGFloat(0)
         
-        let buffer = CGFloat(1)
+        let buffer = CGFloat(0.5)
         
         
         if self.positions.count == 10{
@@ -83,6 +99,9 @@ public class BlobNode: SKSpriteNode {
         self.positions.insert(position, atIndex: 0)
         
         sum = self.positions.reduce(0, combine: +)
+        
+        
+        
         //print("----------------------")
         //print(sum/CGFloat(self.positions.count))
         //print("----------------------")
@@ -90,9 +109,14 @@ public class BlobNode: SKSpriteNode {
         if self.positions.count > 8{
             if sum/CGFloat(self.positions.count) < self.positions[0] + buffer
                 && sum/CGFloat(self.positions.count) > self.positions[0] - buffer {
-                self.positions.removeAll()
+                
+                    
+                    //print("----------------------")
+                    //print(sum)
+                    //print("----------------------")
+                    self.positions.removeAll()
                 return true
-
+                    
                 
             }
             else{
