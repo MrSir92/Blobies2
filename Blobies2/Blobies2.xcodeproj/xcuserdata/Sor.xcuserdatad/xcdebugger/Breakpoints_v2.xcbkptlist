@@ -63,7 +63,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "37"
             endingLineNumber = "37"
-            landmarkName = "Update()"
+            landmarkName = "blob(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -79,7 +79,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "39"
             endingLineNumber = "39"
-            landmarkName = "switchDistance()"
+            landmarkName = "blob(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -110,9 +110,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "12"
-            endingLineNumber = "12"
-            landmarkName = "BlobNode"
-            landmarkType = "3">
+            endingLineNumber = "12">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -126,9 +124,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "16"
-            endingLineNumber = "16"
-            landmarkName = "BlobNode"
-            landmarkType = "3">
+            endingLineNumber = "16">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -142,9 +138,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "17"
-            endingLineNumber = "17"
-            landmarkName = "BlobNode"
-            landmarkType = "3">
+            endingLineNumber = "17">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -159,8 +153,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "61"
             endingLineNumber = "61"
-            landmarkName = "checkWallCollide(_:)"
-            landmarkType = "5">
+            landmarkName = "BlobNode"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -175,7 +169,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "35"
             endingLineNumber = "35"
-            landmarkName = "Update()"
+            landmarkName = "blob(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

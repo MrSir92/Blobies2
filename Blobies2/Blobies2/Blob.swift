@@ -37,7 +37,6 @@ public class BlobNode: SKSpriteNode {
         blob.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
         blob.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
         blob.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
-        blob.physicsBody = SKPhysicsBody(edgeLoopFromRect: frame)
         
         blob.xScale = 0.075
         blob.yScale = 0.075
