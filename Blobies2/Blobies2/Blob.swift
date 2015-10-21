@@ -49,34 +49,43 @@ public class BlobNode: SKSpriteNode {
     func Update(index: BlobNode){
         print(self)
         if checkWallCollide(self.position.x){
+<<<<<<< HEAD
             //flipDirection()
             switchDistance(index)
+=======
+            switchDistance(self)
+>>>>>>> origin/cleanup
         }
     }
-    
+    /*
     func switchDistance() {
         self.distance = self.distance * CGFloat(-1)
-    }
+    }*/
     
+<<<<<<< HEAD
     func switchDistance(index: BlobNode) {
+=======
+func switchDistance(index: BlobNode) {
+>>>>>>> origin/cleanup
         if(goingRight) {
             //self.distance = self.distance * -1
-            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: -10000, dy: 0), duration: 200)))
+            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: -10000, dy: 0), duration: duration)))
             goingRight = false
         } else {
-            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 10000, dy: 0), duration: 200)))
+            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 10000, dy: 0), duration: duration)))
             goingRight = true
         }
     }
     
     /*func startMove(index: BlobNode) {
         index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200)))
-    }*/
+    }
 
     
     func getDistance() -> CGFloat {
         return self.distance
     }
+<<<<<<< HEAD
     
     /*func flipDirection(){
         //self.distance *= -1
@@ -89,6 +98,13 @@ public class BlobNode: SKSpriteNode {
         }
         
         
+=======
+    /*
+    func flipDirection(){
+        self.distance *= -1
+        
+        self.runAction(SKAction .repeatActionForever(SKAction.moveByX(distance, y: 0, duration: duration)))
+>>>>>>> origin/cleanup
     }*/
     
     func checkWallCollide(position: CGFloat) -> Bool {
@@ -98,8 +114,8 @@ public class BlobNode: SKSpriteNode {
         let buffer = CGFloat(0.5)
         
         
-        if self.positions.count == 10{
-            positions.removeAtIndex(9)
+        if self.positions.count == 9{
+            positions.removeAtIndex(8)
         }
         
         self.positions.insert(position, atIndex: 0)
