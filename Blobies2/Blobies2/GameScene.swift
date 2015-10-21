@@ -263,7 +263,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.blobies.append(blob)
         var moveDistance = CGFloat(10000)
         moveDistance = moveDistance * 1
-        blob.runAction(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40))
+        blob.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40)))
     }
 
     
