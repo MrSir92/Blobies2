@@ -235,8 +235,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ref = CGPathCreateMutable()
         
         //print(pathLength)
-        if (self.isSmudge) {
         pathLength = Float(0)
+        if (self.isSmudge) {
             print(self.smudgeDestroyer)
         if (self.smudgeDestroyer) {
             smudgeToDie(smudgeToBeDestroyed)
