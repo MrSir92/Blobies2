@@ -43,15 +43,14 @@ public class BlobNode: SKSpriteNode {
         blob.xScale = 0.075
         blob.yScale = 0.075
         blob.position = location
-        let distanceToMove = 1000
-        let moveduration = 500
         return blob
     }
     
-    func Update(){
+    func Update(index: BlobNode){
         print(self)
         if checkWallCollide(self.position.x){
-            flipDirection()
+            //flipDirection()
+            switchDistance(index)
         }
     }
     
@@ -59,7 +58,7 @@ public class BlobNode: SKSpriteNode {
         self.distance = self.distance * CGFloat(-1)
     }
     
-    /*func switchDistance(index: BlobNode) {
+    func switchDistance(index: BlobNode) {
         if(goingRight) {
             //self.distance = self.distance * -1
             index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: -10000, dy: 0), duration: 200)))
@@ -70,7 +69,7 @@ public class BlobNode: SKSpriteNode {
         }
     }
     
-    func startMove(index: BlobNode) {
+    /*func startMove(index: BlobNode) {
         index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200)))
     }*/
 
@@ -79,11 +78,18 @@ public class BlobNode: SKSpriteNode {
         return self.distance
     }
     
-    func flipDirection(){
-        self.distance *= -1
+    /*func flipDirection(){
+        //self.distance *= -1
+        if (goingRight) {
+            self.runAction(SKAction .repeatActionForever(SKAction.moveByX(-10000, y: 0, duration: duration)))
+            goingRight = false
+        } else {
+            self.runAction(SKAction .repeatActionForever(SKAction.moveByX(10000, y: 0, duration: duration)))
+            goingRight = true
+        }
         
-        self.runAction(SKAction .repeatActionForever(SKAction.moveByX(distance, y: 0, duration: duration)))
-    }
+        
+    }*/
     
     func checkWallCollide(position: CGFloat) -> Bool {
         

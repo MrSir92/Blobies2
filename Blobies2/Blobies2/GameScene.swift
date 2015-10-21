@@ -391,7 +391,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             //	print(self.blobies)
         for index in blobies{
-            index.Update()
+            index.Update(index)
             /*
             var toTurn = index.Update()
             if(toTurn) {
