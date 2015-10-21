@@ -65,10 +65,10 @@ func switchDistance(index: BlobNode) {
 
         if(goingRight) {
             //self.distance = self.distance * -1
-            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: -10000, dy: 0), duration: duration)))
+            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: -10000, dy: 0), duration: 200)))
             goingRight = false
         } else {
-            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 10000, dy: 0), duration: duration)))
+            index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 10000, dy: 0), duration: 200)))
             goingRight = true
         }
     }
