@@ -10,6 +10,8 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    
+    var blobies: [BlobNode] = []
     var TheLevel: Level!
     var theCamera: SKCameraNode!
     var globalBool: Bool = false
@@ -205,15 +207,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.smudgeDestroyer = false
             }
         }
+        ref = CGPathCreateMutable()
         
-        //Reset all variables for the next touch-event.
+        //print(pathLength)
+        pathLength = Float(0)
+        if (self.isSmudge) {
+            print(self.smudgeDestroyer)
+        if (self.smudgeDestroyer) {
+            smudgeToDie(smudgeToBeDestroyed)
+            self.smudgeDestroyer = false
+        } else {
+            print("hejhopp")
+            //print(self.smudgeDestroyer)
+            //print(self.saveSmudge)
+            self.saveSmudge = true
+            self.smudgeDestroyer = false
+        }
+        }
+        
         self.isSmudge = false
         self.isSprite = false
         lastPoint.x = (self.view?.center.x)!
         self.TwoFingers = false
-        ref = CGPathCreateMutable()
-        pathLength = Float(0)
+
     }
+
+    
+    func spawnBlobNode(point: CGPoint) {
+        let blob = BlobNode.blob(point)
+        blob.name = "Blobie"
+        self.TheLevel.addChild(blob)
+        self.blobies.append(blob)
+        var moveDistance = CGFloat(10000)
+        moveDistance = moveDistance * 1
+        blob.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: 1000, dy: 0), duration: 40)))
+    }
+
     
     
     func checkIfNodeIsSprite(location: CGPoint) ->Bool {
@@ -278,6 +307,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             useless++
         }
     }
+<<<<<<< HEAD
     
     func spawnBlobNode(point: CGPoint) {
         let sprite = BlobNode.blob(point)
@@ -297,6 +327,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+=======
+
+
+>>>>>>> cleanup
     func moveCameraToSpawn(position: CGPoint) {
         if (self.theCamera != nil) {
             self.theCamera.position = CGPoint(x: position.x, y: position.y)
@@ -312,7 +346,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             var newPosition = CGPoint(x: newX, y: 150)
             newPosition.x = CGFloat(min(newPosition.x, 410))
             newPosition.x = CGFloat(max(newPosition.x, 80))
+<<<<<<< HEAD
 
+=======
+            let time = Double(distance)/2
+            
+            /*if (newX > 80){
+                
+                if (newX < 410) {
+                    self.theCamera.runAction(SKAction.moveByX(distance, y: 0, duration: time))
+                }
+            }*/
+                //(CGPoint(x: newPosition.x, y: 150), duration: 0))
+>>>>>>> cleanup
 
             self.theCamera.position = CGPoint(x: newPosition.x, y: 150)
         }
@@ -322,13 +368,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Called before each frame is rendered */
         
         for index in blobies{
+<<<<<<< HEAD
             let toTurn = index.Update()
+=======
+            index.Update(index)
+            /*
+            var toTurn = index.Update()
+>>>>>>> cleanup
             if(toTurn) {
                 index.switchDistance()
                 let distance = index.getDistance()
                 index.runAction(SKAction.repeatActionForever(SKAction.moveBy(CGVector(dx: distance, dy: 0), duration: 200)))
             }
+            */
         }
+<<<<<<< HEAD
+=======
+            //print(self.blobies)
+            //print(self.blobies)
+
+        //}
+>>>>>>> cleanup
     }
 
 
