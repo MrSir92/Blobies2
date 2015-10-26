@@ -22,6 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var saveSmudge: Bool = false
     var smudges: [SKShapeNode]!
     var TwoFingers: Bool = false
+    var smudge: SKNode!
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -39,6 +40,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ref = CGPathCreateMutable()
     var pathLength = Float(0)
     var useless = 0
+    var firstSmudgePart = true
+    var ancorA: SKShapeNode!
+    var joints: [SKPhysicsJointFixed] = []
     
     override func didMoveToView(view: SKView) {
         
@@ -111,6 +115,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func singleTouchMoved(touches: Set<UITouch>) {
         
+        if (firstSmudgePart) {
+            self.smudge = SKNode()
+        }
+        
         let touch =  touches.first
         let positionInScene = touch!.locationInNode(self)
         
@@ -120,12 +128,61 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 let offset = CGPointMake(lastPoint.x - positionInScene.x, lastPoint.y - positionInScene.y)
                 let length = sqrtf(Float(offset.x * offset.x + offset.y * offset.y))
+                let partOfSmudge = drawSmudgePart(lastPoint, secondPoint: positionInScene)
+
+                self.smudge?.addChild(partOfSmudge)
+                
+                
                 pathLength = pathLength + length
                 
                 lastPoint.x = positionInScene.x
                 lastPoint.y = positionInScene.y
             }
  
+    }
+    
+    func drawSmudgePart(firstPoint: CGPoint, secondPoint: CGPoint) -> SKShapeNode {
+        let offset = CGPointMake(firstPoint.x - secondPoint.x, firstPoint.y - secondPoint.y)
+        let hypotenusa = sqrtf(Float(offset.x * offset.x + offset.y * offset.y))
+        let length = CGFloat(hypotenusa)
+        let position = CGPointMake(firstPoint.x - (offset.x / 2), firstPoint.y - (offset.y / 2))
+        
+        let smudgePart = SKShapeNode(rectOfSize: CGSize(width: length, height: 2))
+        smudgePart.fillColor = SKColor(red: 0.19, green: 0.84, blue: 0.94, alpha: 1)
+        smudgePart.position = CGPoint(x: position.x, y: position.y)
+        smudgePart.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: length, height: 2))
+        smudgePart.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
+        let angle = atan2(offset.y, offset.x)
+        smudgePart.zRotation = angle
+        smudgePart.physicsBody?.friction = 5.0
+        smudgePart.physicsBody?.density = 5
+        if (firstSmudgePart) {
+            self.ancorA = smudgePart
+            print(smudgePart)
+            print(ancorA)
+            firstSmudgePart = false
+        } else {
+           // print(self.ancorA)
+           // print(self.ancorB)
+            
+            let joint = SKPhysicsJointFixed.jointWithBodyA(self.ancorA.physicsBody!, bodyB: smudgePart.physicsBody!, anchor: self.ancorA.position)
+            //self.physicsWorld.addJoint(joint)
+            self.joints.append(joint)
+            
+            self.ancorA = smudgePart
+            
+        }
+        
+        return smudgePart
+    }
+    
+    func completeSmudge(smudge: SKNode) {
+        self.addChild(smudge)
+        for currentJoint in self.joints {
+            self.physicsWorld.addJoint(currentJoint)
+        }
+        self.firstSmudgePart = true
+        self.joints = []
     }
     
     func twoFingersMoved(touches: Set<UITouch>) {
@@ -139,7 +196,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func drawSmudge() {
         
-        let lineNode = SKShapeNode();
+       /* let lineNode = SKShapeNode();
         lineNode.path = ref
         lineNode.lineWidth = 4
         lineNode.name = "Smudge"
@@ -154,7 +211,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if (self.blobDestroyer) {
             blobToDie(blobToBeDestroyed)
             self.blobDestroyer = false
-        }
+        }*/
+        
+        completeSmudge(self.smudge)
         
     }
     
