@@ -10,7 +10,8 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    
+    var victoryCondition: Bool = false
+    var blobdeathcount = 0
     var blobies: [BlobNode] = []
     var TheLevel: Level!
     var theCamera: SKCameraNode!
@@ -68,6 +69,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if (blobCount < 10) {
                 self.spawnBlobNode(CGPoint(x: 50, y: 200))
                 blobCount++
+            }
+            else{
+                self.victoryCondition = true
             }
         }
         
@@ -265,6 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Kill the blob here.
         //print("blob just died!...")
         blob.removeFromParent()
+        blobdeathcount++
     }
     
     func smudgeToDie(smudge: SKShapeNode) {
@@ -321,6 +326,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.theCamera.position = CGPoint(x: newPosition.x, y: 150)
         }
     }
+    
+    func sceneTransition(){
+        let transition = SKTransition.revealWithDirection(.Down, duration: 1.0)
+        
+        let nextScene = ResultScene(size: scene!.size)
+        nextScene.scaleMode = .AspectFill
+        
+        scene?.view?.presentScene(nextScene, transition: transition)
+    }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
@@ -329,6 +343,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             index.Update(index)
 
+        }
+        if(victoryCondition){
+            if(blobdeathcount >= 10){
+                sceneTransition()
+            }
         }
 
     }
