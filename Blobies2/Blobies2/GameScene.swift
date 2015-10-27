@@ -152,6 +152,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         smudgePart.position = CGPoint(x: position.x, y: position.y)
         smudgePart.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: length, height: 2))
         smudgePart.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
+        smudgePart.physicsBody?.collisionBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Wall.rawValue
         let angle = atan2(offset.y, offset.x)
         smudgePart.zRotation = angle
         smudgePart.physicsBody?.friction = 5.0
