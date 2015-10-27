@@ -156,7 +156,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let angle = atan2(offset.y, offset.x)
         smudgePart.zRotation = angle
         smudgePart.physicsBody?.friction = 5.0
-        smudgePart.physicsBody?.density = 5
+        smudgePart.physicsBody?.density = 50.0
         if (firstSmudgePart) {
             self.ancorA = smudgePart
             print(smudgePart)
@@ -215,6 +215,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }*/
         
         completeSmudge(self.smudge)
+        
+        if (self.blobDestroyer) {
+            blobToDie(blobToBeDestroyed)
+            self.blobDestroyer = false
+        }
         
     }
     
