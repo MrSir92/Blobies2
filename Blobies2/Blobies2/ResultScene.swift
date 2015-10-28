@@ -11,15 +11,70 @@ import SpriteKit
 class ResultScene: SKScene {
     
     var isRestartButton = false
+    var newScore: NSNumber!
+    var highScore: NSNumber!
+    var existedHighScore = false
     
     override func didMoveToView(view: SKView) {
-        
-        let newHighScore = checkForHighScore()
         printCurrentScore()
+        let newHighScore = checkForHighScore()
         if (newHighScore) {
+            let preferences = NSUserDefaults.standardUserDefaults()
             
-        }else {
+            let currentLevelKey = "firstlevel"
             
+            preferences.setDouble(self.newScore.doubleValue, forKey: currentLevelKey)
+            
+
+            let didSave = preferences.synchronize()
+            
+            if !didSave {
+                
+            }
+            let highScoreLabel = SKLabelNode(fontNamed: "highscorelabel")
+            highScoreLabel.text = "You scored a new HighScore: "
+            highScoreLabel.position = CGPoint(x: 400, y: 280)
+            highScoreLabel.fontSize = 15
+            highScoreLabel.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
+            self.addChild(highScoreLabel)
+            let highScoreText = SKLabelNode(fontNamed: "highScore")
+            highScoreText.text = String(newScore)
+            highScoreText.position = CGPoint(x: 400, y: 250);
+            highScoreText.fontSize = 30
+            highScoreText.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
+            self.addChild(highScoreText)
+        }else if (self.existedHighScore){
+            let highScoreLabel = SKLabelNode(fontNamed: "highscorelabel")
+            highScoreLabel.text = "Your old HighScore: "
+            highScoreLabel.position = CGPoint(x: 400, y: 280)
+            highScoreLabel.fontSize = 15
+            highScoreLabel.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
+            self.addChild(highScoreLabel)
+            let highScoreText = SKLabelNode(fontNamed: "highScore")
+            highScoreText.text = String(highScore)
+            highScoreText.position = CGPoint(x: 400, y: 250);
+            highScoreText.fontSize = 30
+            highScoreText.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
+            self.addChild(highScoreText)
+        } else {
+            let preferences = NSUserDefaults.standardUserDefaults()
+            
+            let currentLevelKey = "firstlevel"
+            
+            preferences.setDouble(self.newScore.doubleValue, forKey: currentLevelKey)
+            
+            
+            let didSave = preferences.synchronize()
+            
+            if !didSave {
+                
+            }
+            let highScoreLabel = SKLabelNode(fontNamed: "highscorelabel")
+            highScoreLabel.text = "You don't have any saved HighScore: "
+            highScoreLabel.position = CGPoint(x: 400, y: 280)
+            highScoreLabel.fontSize = 15
+            highScoreLabel.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
+            self.addChild(highScoreLabel)
         }
         
         let restartButton = SKShapeNode(rectOfSize: CGSize(width: 50, height: 50))
@@ -32,17 +87,17 @@ class ResultScene: SKScene {
     
     func printCurrentScore() {
         if let theScore = scene?.userData?.valueForKey("score") as? NSNumber {
-            print(theScore)
+            self.newScore = theScore
             
-            let labelText = SKLabelNode(fontNamed: "label")
-            labelText.text = "You scored: "
-            labelText.position = CGPoint(x: 500, y: 280)
-            labelText.fontSize = 30
-            labelText.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
-            self.addChild(labelText)
-            let scoreText = SKLabelNode(fontNamed: "toPrint")
-            scoreText.text = String(theScore)
-            scoreText.position = CGPoint(x: 500, y: 250);
+            let scoreLabel = SKLabelNode(fontNamed: "scorelabel")
+            scoreLabel.text = "You scored: "
+            scoreLabel.position = CGPoint(x: 600, y: 280)
+            scoreLabel.fontSize = 15
+            scoreLabel.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
+            self.addChild(scoreLabel)
+            let scoreText = SKLabelNode(fontNamed: "score")
+            scoreText.text = String(newScore)
+            scoreText.position = CGPoint(x: 600, y: 250);
             scoreText.fontSize = 30
             scoreText.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
             self.addChild(scoreText)
@@ -52,6 +107,27 @@ class ResultScene: SKScene {
     
     func checkForHighScore() -> Bool {
     
+        let preferences = NSUserDefaults.standardUserDefaults()
+        
+        let currentLevelKey = "firstlevel"
+        
+        if preferences.objectForKey(currentLevelKey) == nil {
+            return false
+            self.highScore = 0
+        } else {
+            self.existedHighScore = true
+            self.highScore = preferences.doubleForKey(currentLevelKey)
+            if (self.highScore.doubleValue >= self.newScore.doubleValue) {
+                return false
+            } else {
+                return true
+            }
+            
+            
+            
+            return false
+        }
+        
         return false
     }
     
