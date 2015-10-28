@@ -152,13 +152,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         smudgePart.position = CGPoint(x: position.x, y: position.y)
         smudgePart.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: length, height: 2))
         smudgePart.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
-        smudgePart.physicsBody?.collisionBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Wall.rawValue
+        smudgePart.physicsBody?.collisionBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
         let angle = atan2(offset.y, offset.x)
         smudgePart.zRotation = angle
-        smudgePart.physicsBody?.friction = 5.0
-        smudgePart.physicsBody?.density = 50.0
+        smudgePart.physicsBody?.friction = 5000.0
+        smudgePart.physicsBody?.density = 0.1
         if (firstSmudgePart) {
             self.ancorA = smudgePart
+            print("-----------------------")
+                        print("-----------------------")
+                        print("-----------------------")
+                        print("-----------------------")
+                        print("-----------------------")
             print(smudgePart)
             print(ancorA)
             firstSmudgePart = false
@@ -166,9 +171,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
            // print(self.ancorA)
            // print(self.ancorB)
             
-            let joint = SKPhysicsJointFixed.jointWithBodyA(self.ancorA.physicsBody!, bodyB: smudgePart.physicsBody!, anchor: self.ancorA.position)
+            let joint = SKPhysicsJointFixed.jointWithBodyA(self.ancorA.physicsBody!, bodyB: smudgePart.physicsBody!, anchor: firstPoint)
+            //joint.damping = 10.0
+            //joint.frequency = 20.0
             //self.physicsWorld.addJoint(joint)
             self.joints.append(joint)
+            
+            /*let joint2 = SKPhysicsJointFixed.jointWithBodyA(self.ancorA.physicsBody!, bodyB: smudgePart.physicsBody!, anchor: secondPoint)
+            //joint.damping = 10.0
+            //joint.frequency = 20.0
+            //self.physicsWorld.addJoint(joint)
+            self.joints.append(joint2)
+            */
             
             self.ancorA = smudgePart
             

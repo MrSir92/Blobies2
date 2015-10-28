@@ -36,7 +36,7 @@ public class BlobNode: SKSpriteNode {
         blob.physicsBody = SKPhysicsBody(circleOfRadius: blob.size.height/2)
         blob.physicsBody!.allowsRotation = false
         blob.physicsBody?.linearDamping = 0.2
-        blob.physicsBody?.density = 0.1
+        blob.physicsBody?.density = 0.001
         blob.physicsBody?.categoryBitMask = CollisionTypes.Blob.rawValue
         blob.physicsBody?.contactTestBitMask = CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue
         blob.physicsBody?.collisionBitMask = CollisionTypes.Wall.rawValue | CollisionTypes.Smudge.rawValue
