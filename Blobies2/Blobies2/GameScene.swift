@@ -10,7 +10,9 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    
+    var victoryCondition: Bool = false
+    var isForfeitButton = false
+    var blobdeathcount = 0
     var blobies: [BlobNode] = []
     var TheLevel: Level!
     var theCamera: SKCameraNode!
@@ -43,7 +45,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
         
         physicsWorld.contactDelegate = self
-        
         self.anchorPoint = CGPointMake(0, 0);
         
         self.TheLevel = Level(progress: 1);
@@ -69,9 +70,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.spawnBlobNode(CGPoint(x: 50, y: 200))
                 blobCount++
             }
+            else{
+                self.victoryCondition = true
+            }
         }
         
         self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+        
+        //Forfeit Button
+        
+        let forfeitButton = SKShapeNode(rectOfSize: CGSize(width: 25, height: 25))
+        forfeitButton.name = "forfeitButton";
+        forfeitButton.fillColor = SKColor(red: 4, green: 4, blue: 0, alpha: 1);
+        forfeitButton.position = CGPoint(x: 450, y: 125);
+        theCamera.addChild(forfeitButton)
+        let forfeitButtonLabel = SKLabelNode(fontNamed: "buttonLabel")
+        forfeitButtonLabel.name = "forfeitButton"
+        forfeitButtonLabel.text = "x"
+        forfeitButtonLabel.position = CGPoint(x: 450, y: 118)
+        forfeitButtonLabel.fontColor = SKColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1)
+        forfeitButtonLabel.fontSize = 20
+        theCamera.addChild(forfeitButtonLabel)
         
     }
     
@@ -166,6 +185,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             for touch in touches {
                 let location = touch.locationInNode(self)
                 singleTouchBegan(location)
+                
+                    self.isForfeitButton = checkIfForfeitButton(location)
+                if(self.isForfeitButton) {
+                    self.points = 0
+                    sceneTransition()
+                }
             }
         } else {
             self.TwoFingers = true
@@ -263,25 +288,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func blobToDie(blob: SKSpriteNode) {
         //Kill the blob here.
-        //print("blob just died!...")
         blob.removeFromParent()
+        blobdeathcount++
     }
     
     func smudgeToDie(smudge: SKShapeNode) {
         //kill the smudge here.
-        //print("smudge just got destroyed...")
         smudge.removeFromParent()
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
         
-        // Step 1. Bitiwse OR the bodies' categories to find out what kind of contact we have
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         switch contactMask {
             
         case CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue:
             
-            // Step 2. Disambiguate the bodies in the contact
             if contact.bodyA.categoryBitMask == CollisionTypes.Blob.rawValue {
                 blobToDie(contact.bodyA.node as! SKSpriteNode)
             } else {
@@ -298,7 +320,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Your total points are:" + String(points))
         
         default:
-            //Måste genomföra något här, så räknar bara upp en variabel...
+            //Måste genomföra något här annars kraschar appen,
+            //så vi räknar bara upp en variabel onödig variabel med en int...
             useless++
         }
     }
@@ -321,6 +344,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.theCamera.position = CGPoint(x: newPosition.x, y: 150)
         }
     }
+    
+    func sceneTransition(){
+        let transition = SKTransition.revealWithDirection(.Down, duration: 1.0)
+        
+        let nextScene = ResultScene(size: scene!.size)
+        nextScene.scaleMode = .AspectFill
+        nextScene.userData = NSMutableDictionary()
+        nextScene.userData?.setValue(self.points, forKey: "score")
+        
+        scene?.view?.presentScene(nextScene, transition: transition)
+    }
+    
+    func checkIfForfeitButton(location: CGPoint) ->Bool {
+        if let touchedNode = self.nodeAtPoint(location) as? SKShapeNode {
+            if (touchedNode.name == "forfeitButton") {
+                return true
+            }
+            return false
+        } else if let touchedNode = self.nodeAtPoint(location) as? SKLabelNode {
+            if (touchedNode.name == "forfeitButton") {
+                return true
+            }
+        }
+        return false
+    }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
@@ -329,6 +377,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             index.Update(index)
 
+        }
+        if(victoryCondition){
+            if(blobdeathcount >= 10){
+                sceneTransition()
+            }
         }
 
     }
