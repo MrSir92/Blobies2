@@ -11,6 +11,7 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var victoryCondition: Bool = false
+    var isRestartButton = false
     var blobdeathcount = 0
     var blobies: [BlobNode] = []
     var TheLevel: Level!
@@ -76,6 +77,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
+        
+        //Restart Button
+        
+        let restartButton = SKShapeNode(rectOfSize: CGSize(width: 50, height: 50))
+        restartButton.name = "restartButton";
+        restartButton.fillColor = SKColor(red: 4, green: 4, blue: 0, alpha: 1);
+        restartButton.position = CGPoint(x: 450, y: 150);
+        theCamera.addChild(restartButton)
         
     }
     
@@ -170,6 +179,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             for touch in touches {
                 let location = touch.locationInNode(self)
                 singleTouchBegan(location)
+                
+                    self.isRestartButton = checkIfRestartButton(location)
+                if(self.isRestartButton) {
+                    self.points = 0
+                    sceneTransition()
+                }
             }
         } else {
             self.TwoFingers = true
@@ -336,6 +351,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         nextScene.userData?.setValue(self.points, forKey: "score")
         
         scene?.view?.presentScene(nextScene, transition: transition)
+    }
+    
+    func checkIfRestartButton(location: CGPoint) ->Bool {
+        if let touchedNode = self.nodeAtPoint(location) as? SKShapeNode {
+            if (touchedNode.name == "restartButton") {
+                return true
+            }
+            return false
+        }
+        return false
     }
    
     override func update(currentTime: CFTimeInterval) {
