@@ -77,11 +77,18 @@ class ResultScene: SKScene {
             self.addChild(highScoreLabel)
         }
         
-        let restartButton = SKShapeNode(rectOfSize: CGSize(width: 50, height: 50))
+        let restartButton = SKShapeNode(rectOfSize: CGSize(width: 80, height: 30))
         restartButton.name = "restartButton";
         restartButton.fillColor = SKColor(red: 4, green: 4, blue: 0, alpha: 1);
-        restartButton.position = CGPoint(x: 500, y: 50);
+        restartButton.position = CGPoint(x: 500, y: 65);
         self.addChild(restartButton)
+        let restartButtonLabe = SKLabelNode(fontNamed: "buttonLabel")
+        restartButtonLabe.name = "restartButton"
+        restartButtonLabe.text = "Restart"
+        restartButtonLabe.position = CGPoint(x: 500, y: 58)
+        restartButtonLabe.fontColor = SKColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1)
+        restartButtonLabe.fontSize = 18
+        self.addChild(restartButtonLabe)
         
     }
     
@@ -147,6 +154,10 @@ class ResultScene: SKScene {
                 return true
             }
             return false
+        } else if let touchedNode = self.nodeAtPoint(location) as? SKLabelNode {
+            if (touchedNode.name == "restartButton") {
+                return true
+            }
         }
         return false
     }

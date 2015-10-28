@@ -11,7 +11,7 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var victoryCondition: Bool = false
-    var isRestartButton = false
+    var isForfeitButton = false
     var blobdeathcount = 0
     var blobies: [BlobNode] = []
     var TheLevel: Level!
@@ -80,10 +80,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Forfeit Button
         
         let forfeitButton = SKShapeNode(rectOfSize: CGSize(width: 25, height: 25))
-        forfeitButton.name = "restartButton";
+        forfeitButton.name = "forfeitButton";
         forfeitButton.fillColor = SKColor(red: 4, green: 4, blue: 0, alpha: 1);
         forfeitButton.position = CGPoint(x: 450, y: 125);
         theCamera.addChild(forfeitButton)
+        let forfeitButtonLabel = SKLabelNode(fontNamed: "buttonLabel")
+        forfeitButtonLabel.name = "forfeitButton"
+        forfeitButtonLabel.text = "x"
+        forfeitButtonLabel.position = CGPoint(x: 450, y: 118)
+        forfeitButtonLabel.fontColor = SKColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1)
+        forfeitButtonLabel.fontSize = 20
+        theCamera.addChild(forfeitButtonLabel)
         
     }
     
@@ -179,8 +186,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let location = touch.locationInNode(self)
                 singleTouchBegan(location)
                 
-                    self.isRestartButton = checkIfRestartButton(location)
-                if(self.isRestartButton) {
+                    self.isForfeitButton = checkIfForfeitButton(location)
+                if(self.isForfeitButton) {
                     self.points = 0
                     sceneTransition()
                 }
@@ -281,26 +288,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func blobToDie(blob: SKSpriteNode) {
         //Kill the blob here.
-        //print("blob just died!...")
         blob.removeFromParent()
         blobdeathcount++
     }
     
     func smudgeToDie(smudge: SKShapeNode) {
         //kill the smudge here.
-        //print("smudge just got destroyed...")
         smudge.removeFromParent()
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
         
-        // Step 1. Bitiwse OR the bodies' categories to find out what kind of contact we have
         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         switch contactMask {
             
         case CollisionTypes.Blob.rawValue | CollisionTypes.Death.rawValue:
             
-            // Step 2. Disambiguate the bodies in the contact
             if contact.bodyA.categoryBitMask == CollisionTypes.Blob.rawValue {
                 blobToDie(contact.bodyA.node as! SKSpriteNode)
             } else {
@@ -317,7 +320,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Your total points are:" + String(points))
         
         default:
-            //Måste genomföra något här, så räknar bara upp en variabel...
+            //Måste genomföra något här annars kraschar appen,
+            //så vi räknar bara upp en variabel onödig variabel med en int...
             useless++
         }
     }
@@ -352,12 +356,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scene?.view?.presentScene(nextScene, transition: transition)
     }
     
-    func checkIfRestartButton(location: CGPoint) ->Bool {
+    func checkIfForfeitButton(location: CGPoint) ->Bool {
         if let touchedNode = self.nodeAtPoint(location) as? SKShapeNode {
-            if (touchedNode.name == "restartButton") {
+            if (touchedNode.name == "forfeitButton") {
                 return true
             }
             return false
+        } else if let touchedNode = self.nodeAtPoint(location) as? SKLabelNode {
+            if (touchedNode.name == "forfeitButton") {
+                return true
+            }
         }
         return false
     }
