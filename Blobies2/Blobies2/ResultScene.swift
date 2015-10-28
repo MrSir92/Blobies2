@@ -10,7 +10,10 @@ import SpriteKit
 
 class ResultScene: SKScene {
     
+    override func didMoveToView(view: SKView) {
+        
+        print(scene?.userData?.valueForKey("score"))
+        
+    }
     
-    
-
 }

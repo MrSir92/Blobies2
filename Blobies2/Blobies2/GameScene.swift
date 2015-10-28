@@ -332,6 +332,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let nextScene = ResultScene(size: scene!.size)
         nextScene.scaleMode = .AspectFill
+        nextScene.userData?.setValue(points, forKey: "score")
         
         scene?.view?.presentScene(nextScene, transition: transition)
     }
