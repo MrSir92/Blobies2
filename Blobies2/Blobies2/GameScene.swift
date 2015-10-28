@@ -45,7 +45,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
         
         physicsWorld.contactDelegate = self
-        
         self.anchorPoint = CGPointMake(0, 0);
         
         self.TheLevel = Level(progress: 1);
@@ -67,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let wait = SKAction.waitForDuration(4)
         let run = SKAction.runBlock {
-            if (blobCount < 1) {
+            if (blobCount < 10) {
                 self.spawnBlobNode(CGPoint(x: 50, y: 200))
                 blobCount++
             }
@@ -78,13 +77,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.runAction(SKAction.repeatActionForever(SKAction.sequence([wait, run])))
         
-        //Restart Button
+        //Forfeit Button
         
-        let restartButton = SKShapeNode(rectOfSize: CGSize(width: 50, height: 50))
-        restartButton.name = "restartButton";
-        restartButton.fillColor = SKColor(red: 4, green: 4, blue: 0, alpha: 1);
-        restartButton.position = CGPoint(x: 450, y: 150);
-        theCamera.addChild(restartButton)
+        let forfeitButton = SKShapeNode(rectOfSize: CGSize(width: 25, height: 25))
+        forfeitButton.name = "restartButton";
+        forfeitButton.fillColor = SKColor(red: 4, green: 4, blue: 0, alpha: 1);
+        forfeitButton.position = CGPoint(x: 450, y: 125);
+        theCamera.addChild(forfeitButton)
         
     }
     
@@ -372,7 +371,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         }
         if(victoryCondition){
-            if(blobdeathcount >= 1){
+            if(blobdeathcount >= 10){
                 sceneTransition()
             }
         }

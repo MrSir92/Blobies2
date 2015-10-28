@@ -24,10 +24,9 @@ class GameViewController: UIViewController {
             skView.ignoresSiblingOrder = true
             
             /* Set the scale mode to scale to fit the window */
-            scene.size.height = skView.bounds.size.height;
+            scene.size.height = 320//skView.bounds.size.height;
             scene.size.width = 1000;
             scene.scaleMode = .AspectFill
-            
             skView.presentScene(scene)
         }
         if let scene = ResultScene(fileNamed:"ResultScene") {
@@ -40,7 +39,7 @@ class GameViewController: UIViewController {
             skView.ignoresSiblingOrder = true
             
             /* Set the scale mode to scale to fit the window */
-            scene.size.height = skView.bounds.size.height;
+            scene.size.height = 320//skView.bounds.size.height;
             scene.size.width = 1000;
             scene.scaleMode = .AspectFill
             
