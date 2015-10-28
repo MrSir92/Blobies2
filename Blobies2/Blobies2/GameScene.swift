@@ -66,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let wait = SKAction.waitForDuration(4)
         let run = SKAction.runBlock {
-            if (blobCount < 10) {
+            if (blobCount < 1) {
                 self.spawnBlobNode(CGPoint(x: 50, y: 200))
                 blobCount++
             }
@@ -332,7 +332,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let nextScene = ResultScene(size: scene!.size)
         nextScene.scaleMode = .AspectFill
-        nextScene.userData?.setValue(points, forKey: "score")
+        nextScene.userData = NSMutableDictionary()
+        nextScene.userData?.setValue(self.points, forKey: "score")
         
         scene?.view?.presentScene(nextScene, transition: transition)
     }
@@ -346,7 +347,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         }
         if(victoryCondition){
-            if(blobdeathcount >= 10){
+            if(blobdeathcount >= 1){
                 sceneTransition()
             }
         }
