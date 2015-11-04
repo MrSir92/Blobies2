@@ -12,9 +12,11 @@ import SpriteKit
 class CameraHandler: NSObject {
     
     func spawnCamera(position: CGPoint, camera: SKCameraNode, theLevel: SKNode, theScene: GameScene) {
+        let spawnXPosition = CGFloat(80)
+        let spawnYPosition = CGFloat(150)
         camera.name = "Camera"
         theLevel.addChild(camera)
-        camera.position = CGPoint(x: 80, y: 150)
+        camera.position = CGPoint(x: spawnXPosition, y: spawnYPosition)
         theScene.camera = camera
     }
     
@@ -23,15 +25,17 @@ class CameraHandler: NSObject {
     }
     
     func moveCamera(distance: CGFloat, camera: SKCameraNode) {
-            
+            let minYPosition = CGFloat(410)
+            let maxYPosition = CGFloat(80)
+            let constantYPosition = CGFloat(150)
             let currentX = camera.position.x
             let newX = currentX - distance
-            var newPosition = CGPoint(x: newX, y: 150)
-            newPosition.x = CGFloat(min(newPosition.x, 410))
-            newPosition.x = CGFloat(max(newPosition.x, 80))
+            var newPosition = CGPoint(x: newX, y: constantYPosition)
+            newPosition.x = CGFloat(min(newPosition.x, minYPosition))
+            newPosition.x = CGFloat(max(newPosition.x, maxYPosition))
         
             
-            camera.position = CGPoint(x: newPosition.x, y: 150)
+            camera.position = CGPoint(x: newPosition.x, y: constantYPosition)
         
     }
 }

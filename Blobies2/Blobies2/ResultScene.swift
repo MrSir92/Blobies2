@@ -43,7 +43,7 @@ class ResultScene: SKScene {
             highScoreText.fontSize = 30
             highScoreText.fontColor = SKColor(red: 1, green: 1, blue: 1, alpha: 1)
             self.addChild(highScoreText)
-        }else if (self.existedHighScore){
+        } else if (self.existedHighScore) {
             let highScoreLabel = SKLabelNode(fontNamed: "highscorelabel")
             highScoreLabel.text = "Your old HighScore: "
             highScoreLabel.position = CGPoint(x: 400, y: 280)
