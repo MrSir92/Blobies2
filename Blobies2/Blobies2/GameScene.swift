@@ -16,14 +16,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var blobies: [BlobNode] = []
     var TheLevel: Level!
     var theCamera: SKCameraNode!
-    var globalBool: Bool = false
     var smudgeDestroyer: Bool = false
     var blobDestroyer: Bool = false
     var smudgeToBeDestroyed: SKShapeNode!
     var blobToBeDestroyed: SKSpriteNode!
     var saveSmudge: Bool = false
     var smudges: [SKShapeNode]!
-    var TwoFingers: Bool = false
+    var TwoFingersTouching: Bool = false
     enum CollisionTypes: UInt32 {
         case Blob = 1
         case Wall = 2
@@ -41,6 +40,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ref = CGPathCreateMutable()
     var pathLength = Float(0)
     var useless = 0
+    
+    let blobName = "Blobie"
+    let smudgeName = "Smudge"
+    let smudgeColor = SKColor(red: 0.19, green: 0.84, blue: 0.94, alpha: 1)
+    let smudgeWidth = CGFloat(4)
+    let smudgeFriction = CGFloat(5.0)
     
     override func didMoveToView(view: SKView) {
         
@@ -103,7 +108,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.isSmudge = checkIfNodeIsSmudge(location)
         
         if (self.isSprite) {
-            self.globalBool = true;
             let bWait = SKAction.waitForDuration(0)
             let bRun = SKAction.runBlock {
                 self.blobDestroyer = true
@@ -123,8 +127,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
             self.runAction(SKAction.sequence([toWait, toRun]))
-        }else {
-            self.globalBool = false;
         }
     }
     
@@ -153,18 +155,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let positionInScene = touch!.locationInNode(self)
         let toMove = CGFloat(positionInScene.x - lastPoint.x)
         lastPoint.x = positionInScene.x
-        moveCamera(toMove/2.5)
+        moveCameraLeftRight(toMove/2.5)
     }
     
     func drawSmudge() {
         
+        
         let lineNode = SKShapeNode();
         lineNode.path = ref
-        lineNode.lineWidth = 4
-        lineNode.name = "Smudge"
-        lineNode.strokeColor = SKColor(red: 0.19, green: 0.84, blue: 0.94, alpha: 1)
+        lineNode.lineWidth = smudgeWidth
+        lineNode.name = smudgeName
+        lineNode.strokeColor = smudgeColor
         lineNode.physicsBody = SKPhysicsBody(edgeChainFromPath: ref)
-        lineNode.physicsBody?.friction = 5.0
+        lineNode.physicsBody?.friction = smudgeFriction
         
         lineNode.physicsBody?.categoryBitMask = CollisionTypes.Smudge.rawValue
         lineNode.physicsBody?.contactTestBitMask = CollisionTypes.Smudge.rawValue
@@ -193,7 +196,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         } else {
-            self.TwoFingers = true
+            self.TwoFingersTouching = true
             let location = firstTouch!.locationInNode(self)
             lastPoint.x = location.x
             lastPoint.y = location.y
@@ -202,9 +205,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        if(!self.TwoFingers) {
+        if(!self.TwoFingersTouching) {
         
-            if (self.globalBool) {
+            if (self.isSprite) {
             
                 singleTouchMoved(touches)
             
@@ -217,11 +220,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if (self.globalBool) {
+        if (self.isSprite) {
             
             drawSmudge()
             
-            self.globalBool = false
         } else if (self.isSmudge) {
             if (self.smudgeDestroyer) {
                 smudgeToDie(smudgeToBeDestroyed)
@@ -248,14 +250,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.isSmudge = false
         self.isSprite = false
         lastPoint.x = (self.view?.center.x)!
-        self.TwoFingers = false
+        self.TwoFingersTouching = false
 
     }
 
     
     func spawnBlobNode(point: CGPoint) {
+        
         let blob = BlobNode.blob(point)
-        blob.name = "Blobie"
+        blob.name = blobName
         self.addChild(blob)
         self.blobies.append(blob)
         var moveDistance = CGFloat(10000)
@@ -276,7 +279,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func checkIfNodeIsSmudge(location: CGPoint) ->Bool {
         if let touchedNode = self.nodeAtPoint(location) as? SKShapeNode {
-            if (touchedNode.name == "Smudge") {
+            if (touchedNode.name == smudgeName) {
                 self.smudgeToBeDestroyed = touchedNode
                 print("Selected Smudge")
                 return true
@@ -320,19 +323,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Your total points are:" + String(points))
         
         default:
-            //Måste genomföra något här annars kraschar appen,
-            //så vi räknar bara upp en variabel onödig variabel med en int...
-            useless++
-        }
-    }
-
-    func moveCameraToSpawn(position: CGPoint) {
-        if (self.theCamera != nil) {
-            self.theCamera.position = CGPoint(x: position.x, y: position.y)
+            break;
         }
     }
     
-    func moveCamera(distance: CGFloat) {
+    func moveCameraLeftRight(distance: CGFloat) {
         if (self.theCamera != nil) {
             
             let currentX = self.theCamera.position.x
@@ -346,6 +341,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func sceneTransition(){
+        
         let transition = SKTransition.revealWithDirection(.Down, duration: 1.0)
         
         let nextScene = ResultScene(size: scene!.size)
@@ -374,9 +370,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Called before each frame is rendered */
         
         for index in blobies{
-
             index.Update(index)
-
         }
         if(victoryCondition){
             if(blobdeathcount >= 10){
